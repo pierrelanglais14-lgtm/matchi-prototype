@@ -3,1260 +3,847 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MatchI – IESEG Social App</title>
+  <title>MatchI – Sprint 1 MVP</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --navy: #0B1F4B;
-      --navy-light: #162D6A;
-      --accent: #1A3F8F;
+      --navy:         #0B1F4B;
+      --navy-light:   #162D6A;
+      --accent:       #1A3F8F;
       --accent-light: #2255B8;
-      --gold: #C9A84C;
-      --gold-light: #E8C96A;
-      --green: #10B981;
-      --red: #EF4444;
-      --bg: #F4F6FB;
-      --card: #FFFFFF;
-      --text: #0B1F4B;
-      --muted: #5A6A8A;
-      --border: #D8E0F0;
-      --radius: 20px;
-      --shadow: 0 4px 24px rgba(11,31,75,0.12);
+      --gold:         #C9A84C;
+      --gold-light:   #E8C96A;
+      --green:        #10B981;
+      --red:          #EF4444;
+      --bg:           #F4F6FB;
+      --card:         #FFFFFF;
+      --text:         #0B1F4B;
+      --muted:        #5A6A8A;
+      --border:       #D8E0F0;
+      --shadow:       0 4px 24px rgba(11,31,75,0.12);
     }
     body {
       font-family: 'Inter', sans-serif;
-      background: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 0;
+      background: linear-gradient(135deg, #0B1F4B 0%, #162D6A 50%, #1A3F8F 100%);
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh; padding: 20px;
     }
     .phone {
-      width: 390px;
-      height: 844px;
-      background: var(--bg);
-      border-radius: 0;
-      box-shadow: none;
-      overflow: hidden;
-      position: relative;
-      flex-shrink: 0;
+      width: 390px; height: 844px;
+      background: var(--bg); border-radius: 44px;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.4), inset 0 0 0 2px rgba(255,255,255,0.15);
+      overflow: hidden; position: relative; flex-shrink: 0;
     }
     .screen {
-      position: absolute;
-      inset: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      display: none;
-      flex-direction: column;
-      background: var(--bg);
-      scrollbar-width: none;
+      position: absolute; inset: 0;
+      overflow-y: auto; overflow-x: hidden;
+      display: none; flex-direction: column;
+      background: var(--bg); scrollbar-width: none;
     }
     .screen::-webkit-scrollbar { display: none; }
     .screen.active { display: flex; }
+    /* Status bar */
     .status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 28px 6px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text);
-      flex-shrink: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 28px 6px; font-size: 12px; font-weight: 600;
+      color: var(--text); flex-shrink: 0;
     }
     .status-bar .time { font-size: 15px; font-weight: 700; }
     .status-icons { display: flex; gap: 6px; align-items: center; font-size: 13px; }
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 10px 0 20px;
-      background: var(--card);
-      border-top: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      cursor: pointer;
-      padding: 4px 14px;
-      border-radius: 12px;
-      transition: all 0.2s;
-    }
-    .nav-item i { font-size: 20px; color: var(--muted); transition: color 0.2s; }
-    .nav-item span { font-size: 10px; color: var(--muted); font-weight: 500; }
-    .nav-item.active i, .nav-item.active span { color: var(--gold); }
-    .btn-primary {
-      background: var(--navy);
-      color: #fff;
-      border: none;
-      border-radius: 14px;
-      padding: 16px 24px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      transition: background 0.2s, transform 0.1s;
+    /* Buttons */
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy); border: none; border-radius: 14px;
+      padding: 16px 24px; font-size: 15px; font-weight: 700;
+      cursor: pointer; width: 100%; transition: opacity 0.2s, transform 0.1s;
       letter-spacing: 0.2px;
     }
-    .btn-primary:active { transform: scale(0.98); }
+    .btn-gold:active { transform: scale(0.98); opacity: 0.9; }
+    .btn-navy {
+      background: var(--navy); color: #fff; border: none; border-radius: 14px;
+      padding: 16px 24px; font-size: 15px; font-weight: 600;
+      cursor: pointer; width: 100%; transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn-navy:active { transform: scale(0.98); }
     .btn-outline {
-      background: transparent;
-      color: var(--navy);
-      border: 2px solid var(--navy);
-      border-radius: 14px;
-      padding: 14px 24px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.2s;
+      background: transparent; color: var(--navy);
+      border: 2px solid var(--navy); border-radius: 14px;
+      padding: 14px 24px; font-size: 15px; font-weight: 600;
+      cursor: pointer; width: 100%; transition: all 0.2s;
     }
-    .btn-accent {
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      color: var(--navy);
-      border: none;
-      border-radius: 14px;
-      padding: 16px 24px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      transition: opacity 0.2s, transform 0.1s;
+    /* Form inputs */
+    .input-field {
+      width: 100%; padding: 14px 16px;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      font-size: 15px; font-family: inherit; color: var(--text);
+      background: #fff; outline: none; transition: border-color 0.2s;
     }
-    .btn-accent:active { transform: scale(0.98); opacity: 0.9; }
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #EEF2FF;
-      color: var(--accent);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 12px;
-      font-weight: 500;
+    .input-field:focus { border-color: var(--gold); }
+    .input-label {
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.5px;
+      display: block; margin-bottom: 6px;
     }
-    .tag.gold { background: #FBF3DC; color: #8B6914; }
-    .tag.green { background: #ECFDF5; color: #059669; }
-    .tag.navy { background: #E8EDF8; color: var(--navy); }
-    .tag.pink { background: #FDF2F8; color: #BE185D; }
-    .avatar-circle {
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 700;
-      flex-shrink: 0;
+    /* Tags / chips */
+    .chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 7px 14px; border-radius: 20px; font-size: 13px;
+      font-weight: 500; cursor: pointer; transition: all 0.15s;
+      border: 1.5px solid var(--border); background: #fff; color: var(--muted);
     }
-    .divider { height: 1px; background: var(--border); margin: 0 20px; }
+    .chip.active {
+      background: #FBF3DC; border-color: var(--gold); color: #7A5C10;
+    }
+    /* Section title */
     .section-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      padding: 0 20px;
-      margin-bottom: 10px;
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
     }
-    .profile-photo {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
+    /* Overlay / modal */
+    .overlay {
+      position: absolute; inset: 0; background: rgba(11,31,75,0.55);
+      display: none; align-items: center; justify-content: center;
+      z-index: 100; backdrop-filter: blur(3px);
     }
-    .card-photo {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    .overlay.show { display: flex; }
+    .modal {
+      background: var(--card); border-radius: 24px; padding: 32px 28px;
+      width: 320px; text-align: center;
+      box-shadow: 0 20px 60px rgba(11,31,75,0.25);
+    }
+    /* Progress bar */
+    .progress-bar {
+      height: 4px; background: var(--border); border-radius: 4px; margin-bottom: 28px;
+    }
+    .progress-fill {
+      height: 4px; border-radius: 4px;
+      background: linear-gradient(90deg, var(--navy), var(--gold));
+      transition: width 0.4s ease;
     }
   </style>
 </head>
 <body>
 <div class="phone">
 
-  <!-- ═══════════════════════════════════════════
-       SCREEN 1 – WELCOME / LOGIN
-  ═══════════════════════════════════════════ -->
-  <div class="screen active" id="screen-welcome">
-    <div style="flex:1; background: linear-gradient(170deg, #0B1F4B 0%, #162D6A 55%, #1A3F8F 100%); display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding: 60px 32px 48px;">
-      <!-- Logo -->
-      <div style="display:flex; flex-direction:column; align-items:center; gap:8px; margin-top:20px;">
-        <div style="width:110px; height:110px; border-radius:28px; overflow:hidden; border:2px solid rgba(201,168,76,0.5); box-shadow:0 8px 32px rgba(0,0,0,0.35);">
-          <img src="Logo App.jpeg" alt="MatchI Logo" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div style="margin-top:12px; text-align:center;">
-          <p style="font-size:12px; font-weight:500; color:rgba(201,168,76,0.8); letter-spacing:3px; text-transform:uppercase; margin-top:4px;">by IESEG</p>
-        </div>
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN 1 – WELCOME
+═══════════════════════════════════════════════════════ -->
+<div class="screen active" id="screen-welcome">
+  <div style="flex:1; background:linear-gradient(170deg,#0B1F4B 0%,#162D6A 55%,#1A3F8F 100%); display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:60px 32px 48px;">
+
+    <!-- Logo block -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:16px;">
+      <div style="width:110px; height:110px; border-radius:28px; overflow:hidden; border:2px solid rgba(201,168,76,0.5); box-shadow:0 8px 32px rgba(0,0,0,0.35); background:#fff; display:flex; align-items:center; justify-content:center;">
+        <img src="../Logo%20App.jpeg" alt="MatchI" style="width:100%; height:100%; object-fit:contain;" />
       </div>
-      <!-- Floating cards preview -->
-      <div style="position:relative; width:100%; height:220px; margin:20px 0;">
-        <div style="position:absolute; left:20px; top:20px; width:140px; background:rgba(255,255,255,0.10); border-radius:20px; padding:16px; border:1px solid rgba(201,168,76,0.25); backdrop-filter:blur(8px); transform:rotate(-6deg);">
-          <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; margin-bottom:8px; border:2px solid rgba(201,168,76,0.4);">
-            <img src="User persona 3.jpg" alt="Camille" style="width:100%; height:100%; object-fit:cover;" />
-          </div>
-          <div style="font-size:13px; font-weight:700; color:#fff;">Camille P.</div>
-          <div style="font-size:11px; color:rgba(255,255,255,0.6);">Lille · M1</div>
-          <div style="margin-top:6px;">
-            <span style="background:rgba(201,168,76,0.2); color:var(--gold-light); border-radius:10px; padding:2px 8px; font-size:10px;">Finance</span>
-          </div>
-        </div>
-        <div style="position:absolute; right:20px; top:0; width:140px; background:rgba(255,255,255,0.10); border-radius:20px; padding:16px; border:1px solid rgba(201,168,76,0.25); backdrop-filter:blur(8px); transform:rotate(5deg);">
-          <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; margin-bottom:8px; border:2px solid rgba(201,168,76,0.4);">
-            <img src="User persona 2.jpg" alt="Lucas" style="width:100%; height:100%; object-fit:cover;" />
-          </div>
-          <div style="font-size:13px; font-weight:700; color:#fff;">Lucas D.</div>
-          <div style="font-size:11px; color:rgba(255,255,255,0.6);">Lille · B1</div>
-          <div style="margin-top:6px;">
-            <span style="background:rgba(201,168,76,0.2); color:var(--gold-light); border-radius:10px; padding:2px 8px; font-size:10px;">Sport</span>
-          </div>
-        </div>
-        <div style="position:absolute; left:50%; transform:translateX(-50%); top:50px; width:150px; background:rgba(255,255,255,0.15); border-radius:20px; padding:16px; border:1px solid rgba(201,168,76,0.35); backdrop-filter:blur(12px);">
-          <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; margin-bottom:8px; border:2px solid rgba(201,168,76,0.5);">
-            <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
-          </div>
-          <div style="font-size:13px; font-weight:700; color:#fff;">Yuki S.</div>
-          <div style="font-size:11px; color:rgba(255,255,255,0.6);">Paris · Exchange</div>
-          <div style="margin-top:6px;">
-            <span style="background:rgba(201,168,76,0.2); color:var(--gold-light); border-radius:10px; padding:2px 8px; font-size:10px;">Travel</span>
-          </div>
-        </div>
-      </div>
-      <!-- Bottom CTA -->
-      <div style="width:100%;">
-        <p style="text-align:center; color:rgba(255,255,255,0.75); font-size:15px; line-height:1.6; margin-bottom:28px;">Connect with IESEG students.<br/>Find your study crew, network, and friends.</p>
-        <button class="btn-primary" style="background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy); font-size:15px; font-weight:700; border-radius:16px; padding:18px; display:flex; align-items:center; justify-content:center; gap:10px;" onclick="goTo('screen-onboarding')">
-          <span>🎓</span> Continue with IESEG Email
-        </button>
-        <p style="text-align:center; color:rgba(255,255,255,0.4); font-size:11px; margin-top:16px;">Exclusive to IESEG School of Management students</p>
+      <p style="font-size:11px; font-weight:600; color:rgba(201,168,76,0.75); letter-spacing:3px; text-transform:uppercase;">by IESEG</p>
+    </div>
+
+    <!-- Tagline -->
+    <div style="text-align:center;">
+      <h1 style="font-size:32px; font-weight:800; color:#fff; letter-spacing:-0.5px; line-height:1.2;">Your IESEG<br/>student network</h1>
+      <p style="font-size:14px; color:rgba(255,255,255,0.65); margin-top:12px; line-height:1.6;">Connect with students across Paris and Lille.<br/>Build friendships, find study partners, grow your network.</p>
+      <!-- Sprint badge -->
+      <div style="display:inline-flex; align-items:center; gap:6px; margin-top:20px; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.35); border-radius:20px; padding:6px 14px;">
+        <div style="width:7px; height:7px; background:var(--gold-light); border-radius:50%;"></div>
+        <span style="font-size:11px; color:var(--gold-light); font-weight:600; letter-spacing:0.5px;">Sprint 1 · Early Access</span>
       </div>
     </div>
-  </div>
 
-
-  <!-- ═══════════════════════════════════════════
-       SCREEN 2 – ONBOARDING / PROFILE SETUP
-  ═══════════════════════════════════════════ -->
-  <div class="screen" id="screen-onboarding">
-    <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
-    <div style="padding:0 20px 30px; flex:1; overflow-y:auto;">
-      <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
-        <button onclick="goTo('screen-welcome')" style="background:none; border:none; cursor:pointer; width:36px; height:36px; border-radius:10px; background:var(--border); display:flex; align-items:center; justify-content:center;"><i class="fas fa-arrow-left" style="color:var(--text); font-size:14px;"></i></button>
-        <div>
-          <h2 style="font-size:22px; font-weight:800; color:var(--text);">Create Profile</h2>
-          <p style="font-size:13px; color:var(--muted);">Step 1 of 1 · Tell us about yourself</p>
-        </div>
-      </div>
-      <div style="height:4px; background:var(--border); border-radius:4px; margin-bottom:28px;">
-        <div style="height:4px; background:linear-gradient(90deg,var(--navy),var(--gold)); border-radius:4px; width:70%;"></div>
-      </div>
-      <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:28px;">
-        <div style="width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,#EEF2FF,#D8E0F0); border:3px dashed var(--gold); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; gap:4px;">
-          <i class="fas fa-camera" style="font-size:22px; color:var(--gold);"></i>
-          <span style="font-size:10px; color:var(--muted); font-weight:500;">Add Photo</span>
-        </div>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:14px;">
-        <div>
-          <label style="font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:6px;">Full Name</label>
-          <input type="text" placeholder="e.g. Sophie Martin" value="Sophie Martin" style="width:100%; padding:14px 16px; border:1.5px solid var(--border); border-radius:12px; font-size:15px; font-family:inherit; color:var(--text); background:#fff; outline:none;" />
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-          <div>
-            <label style="font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:6px;">Age</label>
-            <input type="number" placeholder="22" value="22" style="width:100%; padding:14px 16px; border:1.5px solid var(--border); border-radius:12px; font-size:15px; font-family:inherit; color:var(--text); background:#fff; outline:none;" />
-          </div>
-          <div>
-            <label style="font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:6px;">Campus</label>
-            <select style="width:100%; padding:14px 16px; border:1.5px solid var(--border); border-radius:12px; font-size:15px; font-family:inherit; color:var(--text); background:#fff; outline:none; appearance:none;">
-              <option>Paris – La Défense</option><option>Lille</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label style="font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:6px;">Study Year</label>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <span onclick="selectYear(this)" class="year-btn" style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--border); font-size:13px; font-weight:500; cursor:pointer; color:var(--muted);">B1</span>
-            <span onclick="selectYear(this)" class="year-btn" style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--border); font-size:13px; font-weight:500; cursor:pointer; color:var(--muted);">B3</span>
-            <span onclick="selectYear(this)" class="year-btn active-year" style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--gold); background:#FBF3DC; font-size:13px; font-weight:600; cursor:pointer; color:#8B6914;">M1</span>
-            <span onclick="selectYear(this)" class="year-btn" style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--border); font-size:13px; font-weight:500; cursor:pointer; color:var(--muted);">M2</span>
-            <span onclick="selectYear(this)" class="year-btn" style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--border); font-size:13px; font-weight:500; cursor:pointer; color:var(--muted);">Exchange</span>
-          </div>
-        </div>
-        <div>
-          <label style="font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:6px;">Languages</label>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <span style="padding:7px 14px; border-radius:20px; background:#FBF3DC; border:1.5px solid var(--gold); font-size:13px; font-weight:500; color:#8B6914; cursor:pointer;">🇫🇷 French</span>
-            <span style="padding:7px 14px; border-radius:20px; background:#FBF3DC; border:1.5px solid var(--gold); font-size:13px; font-weight:500; color:#8B6914; cursor:pointer;">🇬🇧 English</span>
-            <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🇩🇪 German</span>
-            <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🇪🇸 Spanish</span>
-            <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🇯🇵 Japanese</span>
-            <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">+ Add</span>
-          </div>
-        </div>
-        <div>
-          <label style="font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:6px;">Interests</label>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <span style="padding:7px 14px; border-radius:20px; background:#FBF3DC; border:1.5px solid var(--gold); font-size:13px; font-weight:500; color:#8B6914; cursor:pointer;">📊 Finance</span>
-            <span style="padding:7px 14px; border-radius:20px; background:#FBF3DC; border:1.5px solid var(--gold); font-size:13px; font-weight:500; color:#8B6914; cursor:pointer;">✈️ Travel</span>
-            <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🎵 Music</span>
-            <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🏃 Sports</span>
-            <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🚀 Entrepreneurship</span>
-            <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">+ More</span>
-          </div>
-        </div>
-        <div>
-          <label style="font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:8px;">I'm looking for</label>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div onclick="selectMode(this,'friend')" id="mode-friend" style="padding:16px; border-radius:14px; border:2px solid var(--gold); background:#FBF3DC; cursor:pointer; text-align:center;">
-              <div style="font-size:24px; margin-bottom:4px;">🤝</div>
-              <div style="font-size:13px; font-weight:700; color:#8B6914;">Friendship</div>
-              <div style="font-size:11px; color:var(--muted); margin-top:2px;">Campus life & fun</div>
-            </div>
-            <div onclick="selectMode(this,'network')" id="mode-network" style="padding:16px; border-radius:14px; border:2px solid var(--border); background:#fff; cursor:pointer; text-align:center;">
-              <div style="font-size:24px; margin-bottom:4px;">💼</div>
-              <div style="font-size:13px; font-weight:700; color:var(--muted);">Networking</div>
-              <div style="font-size:11px; color:var(--muted); margin-top:2px;">Career & projects</div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <label style="font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:6px;">Bio</label>
-          <textarea placeholder="Tell other IESEG students about yourself..." style="width:100%; padding:14px 16px; border:1.5px solid var(--border); border-radius:12px; font-size:14px; font-family:inherit; color:var(--text); background:#fff; outline:none; resize:none; height:90px; line-height:1.5;">M1 Finance student passionate about sustainable investing. Love hiking, jazz, and finding the best coffee spots in Paris. Always up for a study session or a good debate! 🌍</textarea>
-        </div>
-        <button class="btn-primary" style="margin-top:8px; border-radius:16px; padding:18px; font-size:16px; background:linear-gradient(135deg,var(--navy),var(--accent-light));" onclick="goTo('screen-swipe')">
-          Start Matching 🚀
-        </button>
-      </div>
+    <!-- CTA buttons -->
+    <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
+      <button class="btn-gold" onclick="goTo('screen-signup')">
+        <i class="fas fa-user-plus" style="margin-right:8px;"></i>Create Account
+      </button>
+      <button onclick="goTo('screen-login')" style="background:rgba(255,255,255,0.1); color:#fff; border:2px solid rgba(255,255,255,0.25); border-radius:14px; padding:15px 24px; font-size:15px; font-weight:600; cursor:pointer; width:100%; transition:all 0.2s;">
+        <i class="fas fa-sign-in-alt" style="margin-right:8px;"></i>Log In
+      </button>
+      <p style="text-align:center; color:rgba(255,255,255,0.35); font-size:11px; margin-top:4px;">Exclusive to IESEG School of Management students</p>
     </div>
+
   </div>
+</div>
 
 
-  <!-- ═══════════════════════════════════════════
-       SCREEN 3 – SWIPE / DISCOVERY
-  ═══════════════════════════════════════════ -->
-  <div class="screen" id="screen-swipe">
-    <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
-    <!-- Top bar -->
-    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 20px 12px;">
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN 2 – SIGN UP (Create Account)
+═══════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-signup">
+  <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
+  <div style="padding:0 24px 36px; flex:1; overflow-y:auto;">
+
+    <!-- Header -->
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+      <button onclick="goTo('screen-welcome')" style="width:36px; height:36px; border-radius:10px; background:var(--border); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <i class="fas fa-arrow-left" style="color:var(--text); font-size:14px;"></i>
+      </button>
       <div>
-        <h2 style="font-size:24px; font-weight:800; color:var(--text);">Discover</h2>
-        <p style="font-size:13px; color:var(--muted);">Paris – La Défense · 24 new profiles</p>
-      </div>
-      <div style="display:flex; gap:10px;">
-        <button onclick="goTo('screen-filters')" style="width:40px; height:40px; border-radius:12px; background:var(--card); border:1.5px solid var(--border); cursor:pointer; display:flex; align-items:center; justify-content:center;">
-          <i class="fas fa-sliders" style="color:var(--text); font-size:15px;"></i>
-        </button>
+        <h2 style="font-size:22px; font-weight:800; color:var(--text);">Create Account</h2>
+        <p style="font-size:13px; color:var(--muted);">Join MatchI with your IESEG email</p>
       </div>
     </div>
-    <!-- Card stack -->
-    <div style="flex:1; padding:0 20px; position:relative; display:flex; flex-direction:column; align-items:center;">
-      <div style="position:absolute; top:8px; width:calc(100% - 56px); height:460px; background:var(--card); border-radius:28px; box-shadow:var(--shadow); transform:scale(0.94) translateY(8px); z-index:1;"></div>
-      <!-- Main card -->
-      <div id="swipe-card" style="position:relative; width:100%; height:460px; background:var(--card); border-radius:28px; box-shadow:0 8px 40px rgba(11,31,75,0.18); z-index:2; overflow:hidden; cursor:grab;">
-        <!-- Initial card: Yuki Suzuki -->
-        <div style="height:280px; position:relative; overflow:hidden;">
-          <img src="User persona 1.jpg" alt="Yuki Suzuki" class="card-photo" style="height:280px; object-fit:cover;" />
-          <div style="position:absolute; bottom:0; left:0; right:0; height:140px; background:linear-gradient(transparent, rgba(11,31,75,0.85));"></div>
-          <div style="position:absolute; bottom:16px; left:20px; right:20px;">
-            <div style="display:flex; align-items:baseline; gap:8px;">
-              <span style="font-size:26px; font-weight:800; color:#fff;">Yuki</span>
-              <span style="font-size:20px; font-weight:400; color:rgba(255,255,255,0.85);">21</span>
-              <span style="margin-left:auto; background:rgba(201,168,76,0.25); border:1px solid rgba(201,168,76,0.5); border-radius:20px; padding:4px 10px; font-size:12px; color:var(--gold-light); font-weight:500; backdrop-filter:blur(4px);">🗼 Paris</span>
-            </div>
-            <p style="font-size:13px; color:rgba(255,255,255,0.8); margin-top:2px;">Exchange · International</p>
-          </div>
-        </div>
-        <div style="padding:16px 20px;">
-          <p style="font-size:14px; color:var(--text); line-height:1.5; margin-bottom:12px; font-style:italic;">"I'm new in Paris and looking for people to explore the city with."</p>
-          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
-            <span class="tag">🌏 Int'l Culture</span>
-            <span class="tag">✈️ Travel</span>
-            <span class="tag">🎌 Paris Life</span>
-            <span class="tag navy">🤝 Friendship</span>
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <span style="font-size:12px; color:var(--muted);">🗣️</span>
-            <span style="font-size:12px; color:var(--muted); font-weight:500;">Japanese · English · beginner French</span>
-          </div>
-        </div>
-      </div>
-      <!-- Action buttons -->
-      <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin-top:20px; padding-bottom:10px;">
-        <button onclick="swipeLeft()" style="width:56px; height:56px; border-radius:50%; background:var(--card); border:2px solid #FEE2E2; box-shadow:0 4px 16px rgba(239,68,68,0.15); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform 0.15s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
-          <i class="fas fa-times" style="font-size:22px; color:var(--red);"></i>
-        </button>
-        <button style="width:44px; height:44px; border-radius:50%; background:var(--card); border:2px solid rgba(201,168,76,0.4); box-shadow:0 4px 16px rgba(201,168,76,0.2); cursor:pointer; display:flex; align-items:center; justify-content:center;">
-          <i class="fas fa-star" style="font-size:18px; color:var(--gold);"></i>
-        </button>
-        <button onclick="swipeRight()" style="width:56px; height:56px; border-radius:50%; background:var(--card); border:2px solid #D1FAE5; box-shadow:0 4px 16px rgba(16,185,129,0.15); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform 0.15s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
-          <i class="fas fa-heart" style="font-size:22px; color:var(--green);"></i>
-        </button>
-      </div>
-    </div>
-    <!-- Bottom nav -->
-    <div class="bottom-nav">
-      <div class="nav-item active" onclick="goTo('screen-swipe')"><i class="fas fa-fire" style="color:var(--gold);"></i><span style="color:var(--gold);">Discover</span></div>
-      <div class="nav-item" onclick="goTo('screen-chat')"><i class="fas fa-comment-dots"></i><span>Chats</span></div>
-      <div class="nav-item" onclick="goTo('screen-profile')"><i class="fas fa-user"></i><span>Profile</span></div>
-      <div class="nav-item" onclick="goTo('screen-notifications')"><i class="fas fa-bell"></i><span>Alerts</span></div>
-    </div>
-  </div>
 
+    <!-- Progress -->
+    <div class="progress-bar"><div class="progress-fill" style="width:33%;"></div></div>
 
-  <!-- ═══════════════════════════════════════════
-       SCREEN 4 – MATCH!
-  ═══════════════════════════════════════════ -->
-  <div class="screen" id="screen-match">
-    <div style="flex:1; background:linear-gradient(170deg, #0B1F4B 0%, #162D6A 40%, #1A3F8F 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 32px; position:relative; overflow:hidden;">
-      <div style="position:absolute; inset:0; pointer-events:none;" id="confetti-container"></div>
-      <!-- Gold accent line -->
-      <div style="width:60px; height:3px; background:linear-gradient(90deg,var(--gold),var(--gold-light)); border-radius:2px; margin-bottom:20px;"></div>
-      <!-- Match badge -->
-      <div style="background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.4); border-radius:20px; padding:8px 20px; margin-bottom:24px; backdrop-filter:blur(8px);">
-        <span style="font-size:13px; font-weight:600; color:var(--gold-light); letter-spacing:2px; text-transform:uppercase;">✨ New Match</span>
-      </div>
-      <h1 style="font-size:44px; font-weight:900; color:#fff; text-align:center; line-height:1.1; margin-bottom:8px; letter-spacing:-1px;">It's a<br/>Match!</h1>
-      <p style="font-size:15px; color:rgba(255,255,255,0.7); text-align:center; margin-bottom:36px;">You and Yuki both liked each other 🎉</p>
-      <!-- Profile pair -->
-      <div style="display:flex; align-items:center; gap:0; margin-bottom:40px;">
-        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-          <div style="width:90px; height:90px; border-radius:50%; overflow:hidden; border:4px solid var(--gold); box-shadow:0 8px 24px rgba(0,0,0,0.3);">
-            <img src="User persona 3.jpg" alt="You" style="width:100%; height:100%; object-fit:cover;" />
-          </div>
-          <span style="font-size:14px; font-weight:700; color:#fff;">You</span>
-          <span style="font-size:11px; color:rgba(255,255,255,0.6);">Paris</span>
-        </div>
-        <div style="width:50px; height:50px; border-radius:50%; background:rgba(201,168,76,0.2); display:flex; align-items:center; justify-content:center; margin:0 -8px; z-index:1; border:3px solid rgba(201,168,76,0.5);">
-          <i class="fas fa-heart" style="color:var(--gold-light); font-size:18px;"></i>
-        </div>
-        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-          <div style="width:90px; height:90px; border-radius:50%; overflow:hidden; border:4px solid var(--gold); box-shadow:0 8px 24px rgba(0,0,0,0.3);">
-            <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
-          </div>
-          <span style="font-size:14px; font-weight:700; color:#fff;">Yuki</span>
-          <span style="font-size:11px; color:rgba(255,255,255,0.6);">Exchange · Paris</span>
-        </div>
-      </div>
-      <!-- Common interests -->
-      <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:14px 20px; margin-bottom:32px; width:100%; backdrop-filter:blur(8px); border:1px solid rgba(201,168,76,0.2);">
-        <p style="font-size:12px; color:rgba(201,168,76,0.8); text-align:center; margin-bottom:8px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px;">You both love</p>
-        <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
-          <span style="background:rgba(201,168,76,0.15); color:var(--gold-light); border-radius:20px; padding:5px 12px; font-size:12px; font-weight:500;">✈️ Travel</span>
-          <span style="background:rgba(201,168,76,0.15); color:var(--gold-light); border-radius:20px; padding:5px 12px; font-size:12px; font-weight:500;">🌏 Int'l Culture</span>
-          <span style="background:rgba(201,168,76,0.15); color:var(--gold-light); border-radius:20px; padding:5px 12px; font-size:12px; font-weight:500;">🎌 Paris Life</span>
-        </div>
-      </div>
-      <!-- Buttons -->
-      <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
-        <button class="btn-primary" style="background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy); font-size:16px; font-weight:700; border-radius:16px; padding:18px;" onclick="goTo('screen-chat')">
-          💬 Send a Message
-        </button>
-        <button onclick="goTo('screen-swipe')" style="background:transparent; border:2px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.8); border-radius:16px; padding:16px; font-size:15px; font-weight:600; cursor:pointer; width:100%;">
-          Keep Swiping
-        </button>
-      </div>
-    </div>
-  </div>
+    <!-- Form -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
 
-
-  <!-- ═══════════════════════════════════════════
-       SCREEN 5 – CHAT / MESSAGING
-  ═══════════════════════════════════════════ -->
-  <div class="screen" id="screen-chat">
-    <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
-    <div style="padding:8px 20px 16px;">
-      <h2 style="font-size:24px; font-weight:800; color:var(--text);">Messages</h2>
-      <p style="font-size:13px; color:var(--muted);">3 active conversations</p>
-    </div>
-    <!-- New matches row -->
-    <div style="padding:0 20px 16px;">
-      <p class="section-title" style="padding:0; margin-bottom:12px;">New Matches</p>
-      <div style="display:flex; gap:14px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none;">
-        <div style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; cursor:pointer;" onclick="openConversation()">
-          <div style="width:60px; height:60px; border-radius:50%; overflow:hidden; border:3px solid var(--gold); position:relative;">
-            <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
-            <div style="position:absolute; bottom:0; right:0; width:16px; height:16px; background:var(--green); border-radius:50%; border:2px solid #fff;"></div>
-          </div>
-          <span style="font-size:11px; font-weight:600; color:var(--text);">Yuki</span>
-        </div>
-        <div style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; cursor:pointer;">
-          <div style="width:60px; height:60px; border-radius:50%; overflow:hidden; border:3px solid var(--gold);">
-            <img src="User persona 2.jpg" alt="Lucas" style="width:100%; height:100%; object-fit:cover;" />
-          </div>
-          <span style="font-size:11px; font-weight:600; color:var(--text);">Lucas</span>
-        </div>
-        <div style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; cursor:pointer;">
-          <div style="width:60px; height:60px; border-radius:50%; overflow:hidden; border:3px solid var(--gold);">
-            <img src="User persona 3.jpg" alt="Camille" style="width:100%; height:100%; object-fit:cover;" />
-          </div>
-          <span style="font-size:11px; font-weight:600; color:var(--text);">Camille</span>
-        </div>
-        <div style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; cursor:pointer;">
-          <div style="width:60px; height:60px; border-radius:50%; overflow:hidden; border:3px solid var(--gold);">
-            <img src="User persona 4.jpg" alt="Etienne" style="width:100%; height:100%; object-fit:cover;" />
-          </div>
-          <span style="font-size:11px; font-weight:600; color:var(--text);">Etienne</span>
-        </div>
+      <div>
+        <label class="input-label">Full Name</label>
+        <input class="input-field" type="text" placeholder="e.g. Camille Perraudin" />
       </div>
-    </div>
-    <div class="divider"></div>
-    <!-- Conversation list -->
-    <div style="flex:1; overflow-y:auto;">
-      <div onclick="openConversation()" style="display:flex; align-items:center; gap:14px; padding:14px 20px; cursor:pointer; transition:background 0.15s;" onmouseenter="this.style.background='#EEF2FF'" onmouseleave="this.style.background='transparent'">
+
+      <div>
+        <label class="input-label">IESEG Email</label>
         <div style="position:relative;">
-          <div style="width:54px; height:54px; border-radius:50%; overflow:hidden;">
-            <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
+          <input class="input-field" type="email" placeholder="firstname.lastname@ieseg.fr" style="padding-right:44px;" />
+          <div style="position:absolute; right:14px; top:50%; transform:translateY(-50%); width:22px; height:22px; background:#EEF2FF; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+            <i class="fas fa-at" style="font-size:10px; color:var(--accent);"></i>
           </div>
-          <div style="position:absolute; bottom:1px; right:1px; width:14px; height:14px; background:var(--green); border-radius:50%; border:2px solid #fff;"></div>
         </div>
-        <div style="flex:1; min-width:0;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-            <span style="font-size:15px; font-weight:700; color:var(--text);">Yuki S.</span>
-            <span style="font-size:11px; color:var(--muted);">2m ago</span>
-          </div>
-          <p style="font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Merci beaucoup! 😊 Can we meet at the Eiffel Tower?</p>
-        </div>
-        <div style="width:20px; height:20px; background:var(--gold); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="font-size:10px; color:var(--navy); font-weight:700;">2</span></div>
+        <p style="font-size:11px; color:var(--muted); margin-top:5px;"><i class="fas fa-info-circle" style="margin-right:4px;"></i>Must end with @ieseg.fr or @student.ieseg.fr</p>
       </div>
-      <div class="divider"></div>
-      <div style="display:flex; align-items:center; gap:14px; padding:14px 20px; cursor:pointer;" onmouseenter="this.style.background='#EEF2FF'" onmouseleave="this.style.background='transparent'">
-        <div style="width:54px; height:54px; border-radius:50%; overflow:hidden;">
-          <img src="User persona 4.jpg" alt="Etienne" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div style="flex:1; min-width:0;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-            <span style="font-size:15px; font-weight:700; color:var(--text);">Etienne N.</span>
-            <span style="font-size:11px; color:var(--muted);">1h ago</span>
-          </div>
-          <p style="font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Are you joining the Junior Entreprise event tomorrow?</p>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div style="display:flex; align-items:center; gap:14px; padding:14px 20px; cursor:pointer;" onmouseenter="this.style.background='#EEF2FF'" onmouseleave="this.style.background='transparent'">
-        <div style="width:54px; height:54px; border-radius:50%; overflow:hidden;">
-          <img src="User persona 3.jpg" alt="Camille" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div style="flex:1; min-width:0;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-            <span style="font-size:15px; font-weight:700; color:var(--text);">Camille P.</span>
-            <span style="font-size:11px; color:var(--muted);">Yesterday</span>
-          </div>
-          <p style="font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">You: Sure, let's study together at the library!</p>
-        </div>
-      </div>
-    </div>
-    <!-- Bottom nav -->
-    <div class="bottom-nav">
-      <div class="nav-item" onclick="goTo('screen-swipe')"><i class="fas fa-fire"></i><span>Discover</span></div>
-      <div class="nav-item active" onclick="goTo('screen-chat')"><i class="fas fa-comment-dots" style="color:var(--gold);"></i><span style="color:var(--gold);">Chats</span></div>
-      <div class="nav-item" onclick="goTo('screen-profile')"><i class="fas fa-user"></i><span>Profile</span></div>
-      <div class="nav-item" onclick="goTo('screen-notifications')"><i class="fas fa-bell"></i><span>Alerts</span></div>
-    </div>
-  </div>
 
-
-  <!-- ═══════════════════════════════════════════
-       SCREEN 5b – CONVERSATION VIEW
-  ═══════════════════════════════════════════ -->
-  <div class="screen" id="screen-conversation">
-    <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
-    <!-- Chat header -->
-    <div style="display:flex; align-items:center; gap:12px; padding:8px 20px 14px; border-bottom:1px solid var(--border); background:var(--card);">
-      <button onclick="goTo('screen-chat')" style="background:none; border:none; cursor:pointer; width:36px; height:36px; border-radius:10px; background:var(--border); display:flex; align-items:center; justify-content:center;"><i class="fas fa-arrow-left" style="color:var(--text); font-size:14px;"></i></button>
-      <div style="width:44px; height:44px; border-radius:50%; overflow:hidden; position:relative; border:2px solid var(--gold);">
-        <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
-        <div style="position:absolute; bottom:0; right:0; width:12px; height:12px; background:var(--green); border-radius:50%; border:2px solid #fff;"></div>
-      </div>
-      <div style="flex:1;">
-        <div style="font-size:16px; font-weight:700; color:var(--text);">Yuki S.</div>
-        <div style="font-size:12px; color:var(--green); font-weight:500;">● Online now</div>
-      </div>
-      <button onclick="goTo('screen-profile-other')" style="background:none; border:none; cursor:pointer; width:36px; height:36px; border-radius:10px; background:var(--border); display:flex; align-items:center; justify-content:center;"><i class="fas fa-user" style="color:var(--text); font-size:14px;"></i></button>
-    </div>
-    <!-- Match banner -->
-    <div style="background:linear-gradient(90deg,#EEF2FF,#FBF3DC); padding:10px 20px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border);">
-      <i class="fas fa-heart" style="color:var(--gold); font-size:13px;"></i>
-      <span style="font-size:12px; color:var(--muted); font-weight:500;">You matched with Yuki on May 16 · Both love Travel & Int'l Culture</span>
-    </div>
-    <!-- Messages -->
-    <div style="flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
-      <div style="text-align:center; margin:4px 0;"><span style="font-size:11px; color:var(--muted); background:var(--border); padding:4px 12px; border-radius:20px; font-weight:500;">Today</span></div>
-      <!-- Their message -->
-      <div style="display:flex; gap:8px; align-items:flex-end; max-width:80%;">
-        <div style="width:28px; height:28px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-          <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div>
-          <div style="background:var(--card); border:1px solid var(--border); border-radius:18px 18px 18px 4px; padding:12px 16px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-            <p style="font-size:14px; color:var(--text); line-height:1.5;">Hello! 👋 I saw we matched on MatchI. I just arrived in Paris and I'm looking for people to explore the city with!</p>
-          </div>
-          <span style="font-size:10px; color:var(--muted); margin-left:4px; margin-top:3px; display:block;">9:15 AM</span>
-        </div>
-      </div>
-      <!-- My message -->
-      <div style="display:flex; justify-content:flex-end; max-width:80%; align-self:flex-end;">
-        <div>
-          <div style="background:var(--navy); border-radius:18px 18px 4px 18px; padding:12px 16px;">
-            <p style="font-size:14px; color:#fff; line-height:1.5;">Welcome to Paris! 🗼 I'd love to show you around. Have you been to Montmartre yet?</p>
-          </div>
-          <span style="font-size:10px; color:var(--muted); text-align:right; display:block; margin-top:3px; margin-right:4px;">9:17 AM ✓✓</span>
-        </div>
-      </div>
-      <!-- Their message -->
-      <div style="display:flex; gap:8px; align-items:flex-end; max-width:80%;">
-        <div style="width:28px; height:28px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-          <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div>
-          <div style="background:var(--card); border:1px solid var(--border); border-radius:18px 18px 18px 4px; padding:12px 16px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-            <p style="font-size:14px; color:var(--text); line-height:1.5;">Not yet! I only know the Eiffel Tower 😅 Merci beaucoup! Can we meet this weekend? 🎌</p>
-          </div>
-          <span style="font-size:10px; color:var(--muted); margin-left:4px; margin-top:3px; display:block;">9:20 AM</span>
-        </div>
-      </div>
-      <!-- My message -->
-      <div style="display:flex; justify-content:flex-end; max-width:80%; align-self:flex-end;">
-        <div>
-          <div style="background:var(--navy); border-radius:18px 18px 4px 18px; padding:12px 16px;">
-            <p style="font-size:14px; color:#fff; line-height:1.5;">Saturday works perfectly! Let's start at Montmartre then grab crêpes 🥐</p>
-          </div>
-          <span style="font-size:10px; color:var(--muted); text-align:right; display:block; margin-top:3px; margin-right:4px;">9:22 AM ✓✓</span>
-        </div>
-      </div>
-      <!-- Their message -->
-      <div style="display:flex; gap:8px; align-items:flex-end; max-width:80%;">
-        <div style="width:28px; height:28px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-          <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div>
-          <div style="background:var(--card); border:1px solid var(--border); border-radius:18px 18px 18px 4px; padding:12px 16px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-            <p style="font-size:14px; color:var(--text); line-height:1.5;">Merci beaucoup! 😊 Can we meet at the Eiffel Tower first? I want to take photos! 📸</p>
-          </div>
-          <span style="font-size:10px; color:var(--muted); margin-left:4px; margin-top:3px; display:block;">9:23 AM</span>
-        </div>
-      </div>
-      <!-- Typing indicator -->
-      <div style="display:flex; gap:8px; align-items:flex-end; max-width:80%;">
-        <div style="width:28px; height:28px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-          <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div style="background:var(--card); border:1px solid var(--border); border-radius:18px 18px 18px 4px; padding:12px 20px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-          <div style="display:flex; gap:4px; align-items:center;">
-            <div style="width:7px; height:7px; background:var(--muted); border-radius:50%; animation:bounce 1.2s infinite 0s;"></div>
-            <div style="width:7px; height:7px; background:var(--muted); border-radius:50%; animation:bounce 1.2s infinite 0.2s;"></div>
-            <div style="width:7px; height:7px; background:var(--muted); border-radius:50%; animation:bounce 1.2s infinite 0.4s;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Input bar -->
-    <div style="padding:12px 16px 28px; background:var(--card); border-top:1px solid var(--border); display:flex; align-items:center; gap:10px;">
-      <button style="width:38px; height:38px; border-radius:50%; background:var(--bg); border:1.5px solid var(--border); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="fas fa-plus" style="color:var(--muted); font-size:14px;"></i></button>
-      <div style="flex:1; background:var(--bg); border:1.5px solid var(--border); border-radius:24px; padding:10px 16px; display:flex; align-items:center; gap:8px;">
-        <input type="text" placeholder="Message Yuki..." style="flex:1; border:none; background:transparent; font-size:14px; font-family:inherit; color:var(--text); outline:none;" />
-        <button style="background:none; border:none; cursor:pointer;"><i class="far fa-smile" style="color:var(--muted); font-size:18px;"></i></button>
-      </div>
-      <button style="width:38px; height:38px; border-radius:50%; background:var(--navy); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="fas fa-paper-plane" style="color:#fff; font-size:14px;"></i></button>
-    </div>
-    <style>@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }</style>
-  </div>
-
-
-  <!-- ═══════════════════════════════════════════
-       SCREEN 6 – USER PROFILE (Camille – logged-in user)
-  ═══════════════════════════════════════════ -->
-  <div class="screen" id="screen-profile">
-    <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
-    <div style="flex:1; overflow-y:auto;">
-      <!-- Profile header -->
-      <div style="background:linear-gradient(160deg, var(--navy) 0%, var(--accent-light) 100%); padding:20px 20px 60px; position:relative;">
-        <div style="display:flex; justify-content:flex-end; margin-bottom:16px;">
-          <button style="background:rgba(201,168,76,0.2); border:1px solid rgba(201,168,76,0.4); border-radius:10px; padding:8px 14px; color:var(--gold-light); font-size:13px; font-weight:600; cursor:pointer; backdrop-filter:blur(4px);">
-            <i class="fas fa-pen" style="margin-right:6px; font-size:11px;"></i>Edit
+      <div>
+        <label class="input-label">Password</label>
+        <div style="position:relative;">
+          <input class="input-field" type="password" placeholder="Min. 8 characters" id="pw-signup" style="padding-right:44px;" />
+          <button onclick="togglePw('pw-signup','eye-signup')" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer;">
+            <i id="eye-signup" class="fas fa-eye" style="color:var(--muted); font-size:15px;"></i>
           </button>
         </div>
-        <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
-          <div style="width:90px; height:90px; border-radius:50%; overflow:hidden; border:4px solid var(--gold); box-shadow:0 4px 20px rgba(0,0,0,0.3);">
-            <img src="User persona 3.jpg" alt="Camille Perraudin" style="width:100%; height:100%; object-fit:cover;" />
-          </div>
-          <div style="text-align:center;">
-            <h2 style="font-size:24px; font-weight:800; color:#fff;">Camille Perraudin</h2>
-            <p style="font-size:14px; color:rgba(255,255,255,0.75); margin-top:2px;">23 · M1 Finance · Lille Campus</p>
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-            <span style="background:rgba(201,168,76,0.2); color:var(--gold-light); border-radius:20px; padding:5px 12px; font-size:12px; font-weight:500; backdrop-filter:blur(4px);">💼 Networking</span>
-            <span style="background:rgba(255,255,255,0.12); color:#fff; border-radius:20px; padding:5px 12px; font-size:12px; font-weight:500; backdrop-filter:blur(4px);">🤝 Collaboration</span>
-          </div>
-        </div>
       </div>
-      <!-- Stats bar -->
-      <div style="background:var(--card); margin:0 20px; border-radius:20px; padding:16px; box-shadow:var(--shadow); transform:translateY(-30px); display:flex; justify-content:space-around;">
-        <div style="text-align:center;">
-          <div style="font-size:22px; font-weight:800; color:var(--navy);">12</div>
-          <div style="font-size:11px; color:var(--muted); font-weight:500;">Matches</div>
-        </div>
-        <div style="width:1px; background:var(--border);"></div>
-        <div style="text-align:center;">
-          <div style="font-size:22px; font-weight:800; color:var(--navy);">3</div>
-          <div style="font-size:11px; color:var(--muted); font-weight:500;">Chats</div>
-        </div>
-        <div style="width:1px; background:var(--border);"></div>
-        <div style="text-align:center;">
-          <div style="font-size:22px; font-weight:800; color:var(--navy);">87%</div>
-          <div style="font-size:11px; color:var(--muted); font-weight:500;">Profile</div>
-        </div>
+
+      <div>
+        <label class="input-label">Confirm Password</label>
+        <input class="input-field" type="password" placeholder="Repeat your password" />
       </div>
-      <!-- Profile content -->
-      <div style="padding:0 20px 20px; margin-top:-14px; display:flex; flex-direction:column; gap:20px;">
-        <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-          <p class="section-title" style="padding:0; margin-bottom:8px;">About Me</p>
-          <p style="font-size:14px; color:var(--text); line-height:1.6;">Looking for motivated students to exchange about finance and career opportunities. M1 Finance at Lille, passionate about consulting and investment. Always ready for a good case study! 📊</p>
-        </div>
-        <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-          <p class="section-title" style="padding:0; margin-bottom:10px;">Specialization</p>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:40px; height:40px; border-radius:12px; background:#FBF3DC; display:flex; align-items:center; justify-content:center; font-size:20px;">📊</div>
-            <div>
-              <div style="font-size:14px; font-weight:700; color:var(--text);">Finance & Accounting</div>
-              <div style="font-size:12px; color:var(--muted);">Master 1 · IESEG Lille</div>
-            </div>
-          </div>
-        </div>
-        <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-          <p class="section-title" style="padding:0; margin-bottom:10px;">Languages</p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <span class="tag navy">🇫🇷 French · Native</span>
-            <span class="tag navy">🇬🇧 English · C1</span>
-            <span class="tag navy">🇪🇸 Spanish · B2</span>
-          </div>
-        </div>
-        <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-          <p class="section-title" style="padding:0; margin-bottom:10px;">Interests</p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <span class="tag">📊 Finance</span>
-            <span class="tag">💼 Consulting</span>
-            <span class="tag">🤝 Networking</span>
-            <span class="tag">📋 Internships</span>
-          </div>
-        </div>
-        <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-          <p class="section-title" style="padding:0; margin-bottom:12px;">Quick Questions</p>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            <div style="background:var(--bg); border-radius:12px; padding:12px 14px;">
-              <p style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px;">My go-to study spot at IESEG</p>
-              <p style="font-size:14px; color:var(--text); font-weight:500;">The Lille library with a strong espresso ☕</p>
-            </div>
-            <div style="background:var(--bg); border-radius:12px; padding:12px 14px;">
-              <p style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px;">Best thing about IESEG</p>
-              <p style="font-size:14px; color:var(--text); font-weight:500;">The professional network and alumni connections 🌐</p>
-            </div>
-            <div style="background:var(--bg); border-radius:12px; padding:12px 14px;">
-              <p style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px;">Dream internship</p>
-              <p style="font-size:14px; color:var(--text); font-weight:500;">M&A analyst at a top-tier consulting firm 🏦</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Bottom nav -->
-    <div class="bottom-nav">
-      <div class="nav-item" onclick="goTo('screen-swipe')"><i class="fas fa-fire"></i><span>Discover</span></div>
-      <div class="nav-item" onclick="goTo('screen-chat')"><i class="fas fa-comment-dots"></i><span>Chats</span></div>
-      <div class="nav-item active" onclick="goTo('screen-profile')"><i class="fas fa-user" style="color:var(--gold);"></i><span style="color:var(--gold);">Profile</span></div>
-      <div class="nav-item" onclick="goTo('screen-notifications')"><i class="fas fa-bell"></i><span>Alerts</span></div>
+
+      <!-- Terms -->
+      <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; padding:12px; background:#F4F6FB; border-radius:12px; border:1.5px solid var(--border);">
+        <input type="checkbox" style="width:17px; height:17px; accent-color:var(--gold); margin-top:1px; flex-shrink:0;" />
+        <span style="font-size:12px; color:var(--muted); line-height:1.5;">I agree to the <span style="color:var(--accent); font-weight:600;">Terms of Service</span> and <span style="color:var(--accent); font-weight:600;">Privacy Policy</span></span>
+      </label>
+
+      <button class="btn-gold" style="margin-top:4px;" onclick="showOverlay('overlay-verify')">
+        <i class="fas fa-user-plus" style="margin-right:8px;"></i>Create My Account
+      </button>
+
+      <p style="text-align:center; font-size:13px; color:var(--muted);">Already have an account? <span style="color:var(--accent); font-weight:600; cursor:pointer;" onclick="goTo('screen-login')">Log In</span></p>
+
     </div>
   </div>
 
+  <!-- Email verification overlay -->
+  <div class="overlay" id="overlay-verify">
+    <div class="modal">
+      <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,var(--navy),var(--accent-light)); display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+        <i class="fas fa-envelope" style="font-size:26px; color:#fff;"></i>
+      </div>
+      <h3 style="font-size:20px; font-weight:800; color:var(--text); margin-bottom:8px;">Check your inbox</h3>
+      <p style="font-size:14px; color:var(--muted); line-height:1.6; margin-bottom:6px;">Verification email sent to</p>
+      <p style="font-size:14px; font-weight:700; color:var(--accent); margin-bottom:20px;">firstname.lastname@ieseg.fr</p>
+      <div style="background:#F4F6FB; border-radius:12px; padding:12px 16px; margin-bottom:24px; border:1px solid var(--border);">
+        <p style="font-size:12px; color:var(--muted); line-height:1.5;"><i class="fas fa-clock" style="margin-right:6px; color:var(--gold);"></i>The link expires in <strong>24 hours</strong>. Check your spam folder if you don't see it.</p>
+      </div>
+      <button class="btn-navy" onclick="hideOverlay('overlay-verify'); goTo('screen-login')">
+        Go to Login
+      </button>
+      <button onclick="hideOverlay('overlay-verify')" style="background:none; border:none; cursor:pointer; font-size:13px; color:var(--muted); margin-top:12px; display:block; width:100%;">Resend email</button>
+    </div>
+  </div>
+</div>
 
-  <!-- ═══════════════════════════════════════════
-       SCREEN 6b – OTHER USER PROFILE (Yuki Suzuki)
-  ═══════════════════════════════════════════ -->
-  <div class="screen" id="screen-profile-other">
-    <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
-    <div style="flex:1; overflow-y:auto;">
-      <div style="background:linear-gradient(160deg, #0B1F4B 0%, #162D6A 100%); padding:20px 20px 60px; position:relative;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
-          <button onclick="goTo('screen-conversation')" style="background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.35); border-radius:10px; padding:8px 14px; color:var(--gold-light); font-size:13px; font-weight:600; cursor:pointer; backdrop-filter:blur(4px);"><i class="fas fa-arrow-left" style="margin-right:6px; font-size:11px;"></i>Back</button>
-          <button style="background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); border-radius:10px; padding:8px 14px; color:#fff; font-size:13px; font-weight:600; cursor:pointer; backdrop-filter:blur(4px);"><i class="fas fa-ellipsis" style="font-size:14px;"></i></button>
-        </div>
-        <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
-          <div style="width:90px; height:90px; border-radius:50%; overflow:hidden; border:4px solid var(--gold); box-shadow:0 4px 20px rgba(0,0,0,0.3);">
-            <img src="User persona 1.jpg" alt="Yuki Suzuki" style="width:100%; height:100%; object-fit:cover;" />
-          </div>
-          <div style="text-align:center;">
-            <h2 style="font-size:24px; font-weight:800; color:#fff;">Yuki Suzuki</h2>
-            <p style="font-size:14px; color:rgba(255,255,255,0.75); margin-top:2px;">21 · Exchange · Paris – La Défense</p>
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-            <span style="background:rgba(201,168,76,0.2); color:var(--gold-light); border-radius:20px; padding:5px 12px; font-size:12px; font-weight:500; backdrop-filter:blur(4px);">🤝 Friendship</span>
-          </div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN 3 – LOG IN
+═══════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-login">
+  <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
+  <div style="padding:0 24px 36px; flex:1; overflow-y:auto;">
+
+    <!-- Header -->
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:28px;">
+      <button onclick="goTo('screen-welcome')" style="width:36px; height:36px; border-radius:10px; background:var(--border); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <i class="fas fa-arrow-left" style="color:var(--text); font-size:14px;"></i>
+      </button>
+      <div>
+        <h2 style="font-size:22px; font-weight:800; color:var(--text);">Welcome back</h2>
+        <p style="font-size:13px; color:var(--muted);">Log in to your MatchI account</p>
+      </div>
+    </div>
+
+    <!-- Logo small -->
+    <div style="display:flex; justify-content:center; margin-bottom:28px;">
+      <div style="width:72px; height:72px; border-radius:20px; overflow:hidden; border:2px solid rgba(201,168,76,0.4); box-shadow:0 4px 16px rgba(11,31,75,0.15); background:#fff; display:flex; align-items:center; justify-content:center;">
+        <img src="../Logo%20App.jpeg" alt="MatchI" style="width:100%; height:100%; object-fit:contain;" />
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+
+      <div>
+        <label class="input-label">IESEG Email</label>
+        <input class="input-field" type="email" placeholder="firstname.lastname@ieseg.fr" />
+      </div>
+
+      <div>
+        <label class="input-label">Password</label>
+        <div style="position:relative;">
+          <input class="input-field" type="password" placeholder="Your password" id="pw-login" style="padding-right:44px;" />
+          <button onclick="togglePw('pw-login','eye-login')" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer;">
+            <i id="eye-login" class="fas fa-eye" style="color:var(--muted); font-size:15px;"></i>
+          </button>
         </div>
       </div>
-      <div style="background:var(--card); margin:0 20px; border-radius:20px; padding:16px; box-shadow:var(--shadow); transform:translateY(-30px); display:flex; justify-content:space-around;">
-        <div style="text-align:center;"><div style="font-size:22px; font-weight:800; color:var(--navy);">5</div><div style="font-size:11px; color:var(--muted); font-weight:500;">Matches</div></div>
-        <div style="width:1px; background:var(--border);"></div>
-        <div style="text-align:center;"><div style="font-size:22px; font-weight:800; color:var(--navy);">3</div><div style="font-size:11px; color:var(--muted); font-weight:500;">Common</div></div>
-        <div style="width:1px; background:var(--border);"></div>
-        <div style="text-align:center;"><div style="font-size:22px; font-weight:800; color:var(--navy);">Exch.</div><div style="font-size:11px; color:var(--muted); font-weight:500;">Year</div></div>
+
+      <!-- Remember me + Forgot password -->
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" style="width:16px; height:16px; accent-color:var(--gold);" />
+          <span style="font-size:13px; color:var(--muted); font-weight:500;">Remember me</span>
+        </label>
+        <button onclick="showOverlay('overlay-reset')" style="background:none; border:none; cursor:pointer; font-size:13px; color:var(--accent); font-weight:600;">Forgot password?</button>
       </div>
-      <div style="padding:0 20px 20px; margin-top:-14px; display:flex; flex-direction:column; gap:16px;">
-        <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-          <p class="section-title" style="padding:0; margin-bottom:8px;">About Yuki</p>
-          <p style="font-size:14px; color:var(--text); line-height:1.6;">I'm new in Paris and looking for people to explore the city with. Japanese exchange student passionate about international culture, travel, and student life. Let's discover Paris together! 🗼</p>
+
+      <button class="btn-gold" style="margin-top:4px;" onclick="goTo('screen-profile-setup-1')">
+        <i class="fas fa-sign-in-alt" style="margin-right:8px;"></i>Log In
+      </button>
+
+      <div style="display:flex; align-items:center; gap:12px; margin:4px 0;">
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+        <span style="font-size:12px; color:var(--muted); font-weight:500;">or</span>
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+      </div>
+
+      <p style="text-align:center; font-size:13px; color:var(--muted);">New to MatchI? <span style="color:var(--accent); font-weight:600; cursor:pointer;" onclick="goTo('screen-signup')">Create an account</span></p>
+
+    </div>
+  </div>
+
+  <!-- Password reset overlay -->
+  <div class="overlay" id="overlay-reset">
+    <div class="modal">
+      <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold-light)); display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+        <i class="fas fa-key" style="font-size:24px; color:var(--navy);"></i>
+      </div>
+      <h3 style="font-size:20px; font-weight:800; color:var(--text); margin-bottom:8px;">Reset Password</h3>
+      <p style="font-size:14px; color:var(--muted); line-height:1.6; margin-bottom:20px;">Enter your IESEG email and we'll send you a reset link.</p>
+      <input class="input-field" type="email" placeholder="firstname.lastname@ieseg.fr" style="margin-bottom:16px;" />
+      <button class="btn-navy" onclick="hideOverlay('overlay-reset'); showOverlay('overlay-reset-sent')">
+        Send Reset Link
+      </button>
+      <button onclick="hideOverlay('overlay-reset')" style="background:none; border:none; cursor:pointer; font-size:13px; color:var(--muted); margin-top:12px; display:block; width:100%;">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Reset sent confirmation overlay -->
+  <div class="overlay" id="overlay-reset-sent">
+    <div class="modal">
+      <div style="width:64px; height:64px; border-radius:50%; background:#ECFDF5; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+        <i class="fas fa-check" style="font-size:26px; color:var(--green);"></i>
+      </div>
+      <h3 style="font-size:20px; font-weight:800; color:var(--text); margin-bottom:8px;">Email sent!</h3>
+      <p style="font-size:14px; color:var(--muted); line-height:1.6; margin-bottom:24px;">Password reset link sent to your IESEG email. Check your inbox and follow the instructions.</p>
+      <button class="btn-gold" onclick="hideOverlay('overlay-reset-sent')">Back to Login</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN 4 – PROFILE SETUP STEP 1 (Photo + Basic Info)
+═══════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-profile-setup-1">
+  <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
+  <div style="padding:0 24px 36px; flex:1; overflow-y:auto;">
+
+    <!-- Header -->
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+      <button onclick="goTo('screen-login')" style="width:36px; height:36px; border-radius:10px; background:var(--border); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <i class="fas fa-arrow-left" style="color:var(--text); font-size:14px;"></i>
+      </button>
+      <div>
+        <h2 style="font-size:22px; font-weight:800; color:var(--text);">Set Up Profile</h2>
+        <p style="font-size:13px; color:var(--muted);">Step 1 of 3 · Basic information</p>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-bar" style="margin-bottom:24px;"><div class="progress-fill" style="width:33%;"></div></div>
+
+    <!-- Photo upload -->
+    <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:28px;">
+      <div id="photo-circle" onclick="triggerPhotoUpload()" style="width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,#EEF2FF,#D8E0F0); border:3px dashed var(--gold); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; gap:4px; position:relative; overflow:hidden; transition:all 0.2s;">
+        <i class="fas fa-camera" style="font-size:22px; color:var(--gold);"></i>
+        <span style="font-size:10px; color:var(--muted); font-weight:500;">Add Photo</span>
+      </div>
+      <input type="file" id="photo-input" accept="image/*" style="display:none;" onchange="previewPhoto(event)" />
+      <p style="font-size:11px; color:var(--muted); margin-top:8px;">Tap to upload a profile photo</p>
+    </div>
+
+    <!-- Form fields -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+
+      <div>
+        <label class="input-label">Full Name</label>
+        <input id="setup-name" class="input-field" type="text" placeholder="e.g. Camille Perraudin" />
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div>
+          <label class="input-label">Age</label>
+          <input id="setup-age" class="input-field" type="number" placeholder="e.g. 21" min="17" max="35" />
         </div>
-        <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-          <p class="section-title" style="padding:0; margin-bottom:10px;">Languages</p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <span class="tag navy">🇯🇵 Japanese · Native</span>
-            <span class="tag navy">🇬🇧 English · Fluent</span>
-            <span class="tag navy">🇫🇷 French · Beginner</span>
+        <div>
+          <label class="input-label">Campus</label>
+          <select id="setup-campus" class="input-field" style="appearance:none; background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><path fill=%22%235A6A8A%22 d=%22M8 11L2 5h12z%22/></svg>'); background-repeat:no-repeat; background-position:right 12px center; background-size:12px;">
+            <option value="">Select…</option>
+            <option>Paris – La Défense</option>
+            <option>Lille</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="input-label">Study Year</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;" id="year-group">
+          <span class="chip" onclick="selectChip(this,'year-group')">B1</span>
+          <span class="chip" onclick="selectChip(this,'year-group')">B2</span>
+          <span class="chip" onclick="selectChip(this,'year-group')">B3</span>
+          <span class="chip active" onclick="selectChip(this,'year-group')">M1</span>
+          <span class="chip" onclick="selectChip(this,'year-group')">M2</span>
+          <span class="chip" onclick="selectChip(this,'year-group')">Exchange</span>
+        </div>
+      </div>
+
+      <button class="btn-gold" onclick="saveStep1(); goTo('screen-profile-setup-2')">
+        Continue <i class="fas fa-arrow-right" style="margin-left:8px;"></i>
+      </button>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN 5 – PROFILE SETUP STEP 2 (Languages + Interests)
+═══════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-profile-setup-2">
+  <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
+  <div style="padding:0 24px 36px; flex:1; overflow-y:auto;">
+
+    <!-- Header -->
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+      <button onclick="goTo('screen-profile-setup-1')" style="width:36px; height:36px; border-radius:10px; background:var(--border); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <i class="fas fa-arrow-left" style="color:var(--text); font-size:14px;"></i>
+      </button>
+      <div>
+        <h2 style="font-size:22px; font-weight:800; color:var(--text);">Set Up Profile</h2>
+        <p style="font-size:13px; color:var(--muted);">Step 2 of 3 · Languages & interests</p>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-bar" style="margin-bottom:24px;"><div class="progress-fill" style="width:66%;"></div></div>
+
+    <div style="display:flex; flex-direction:column; gap:22px;">
+
+      <!-- Languages -->
+      <div>
+        <p class="section-title">Spoken Languages</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;" id="lang-group">
+          <span class="chip active" onclick="selectChip(this,'lang-group')">🇫🇷 French</span>
+          <span class="chip active" onclick="selectChip(this,'lang-group')">🇬🇧 English</span>
+          <span class="chip" onclick="selectChip(this,'lang-group')">🇩🇪 German</span>
+          <span class="chip" onclick="selectChip(this,'lang-group')">🇪🇸 Spanish</span>
+          <span class="chip" onclick="selectChip(this,'lang-group')">🇯🇵 Japanese</span>
+          <span class="chip" onclick="selectChip(this,'lang-group')">🇮🇹 Italian</span>
+          <span class="chip" onclick="selectChip(this,'lang-group')">🇨🇳 Chinese</span>
+          <span class="chip" onclick="selectChip(this,'lang-group')">🇵🇹 Portuguese</span>
+        </div>
+        <p style="font-size:11px; color:var(--muted); margin-top:8px;"><i class="fas fa-info-circle" style="margin-right:4px;"></i>Select all languages you speak</p>
+      </div>
+
+      <!-- Interests -->
+      <div>
+        <p class="section-title">Interests</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;" id="interest-group">
+          <span class="chip active" onclick="selectChip(this,'interest-group')">📊 Finance</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">💼 Consulting</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">🚀 Entrepreneurship</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">📈 Marketing</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">🌱 Sustainability</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">🏃 Sports</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">🎵 Music</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">✈️ Travel</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">🌏 Int'l Culture</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">🎨 Arts</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">📚 Study Groups</span>
+          <span class="chip" onclick="selectChip(this,'interest-group')">🤝 Associations</span>
+        </div>
+        <p style="font-size:11px; color:var(--muted); margin-top:8px;"><i class="fas fa-info-circle" style="margin-right:4px;"></i>Pick at least 2 interests</p>
+      </div>
+
+      <button class="btn-gold" onclick="saveStep2(); goTo('screen-profile-setup-3')">
+        Continue <i class="fas fa-arrow-right" style="margin-left:8px;"></i>
+      </button>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN 6 – PROFILE SETUP STEP 3 (Bio + Goal)
+═══════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-profile-setup-3">
+  <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
+  <div style="padding:0 24px 36px; flex:1; overflow-y:auto;">
+
+    <!-- Header -->
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+      <button onclick="goTo('screen-profile-setup-2')" style="width:36px; height:36px; border-radius:10px; background:var(--border); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <i class="fas fa-arrow-left" style="color:var(--text); font-size:14px;"></i>
+      </button>
+      <div>
+        <h2 style="font-size:22px; font-weight:800; color:var(--text);">Set Up Profile</h2>
+        <p style="font-size:13px; color:var(--muted);">Step 3 of 3 · About you & your goal</p>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-bar" style="margin-bottom:24px;"><div class="progress-fill" style="width:100%;"></div></div>
+
+    <div style="display:flex; flex-direction:column; gap:22px;">
+
+      <!-- Bio -->
+      <div>
+        <label class="input-label">About Me</label>
+        <textarea id="setup-bio" class="input-field" placeholder="Tell other IESEG students about yourself…" style="resize:none; height:100px; line-height:1.6;"></textarea>
+        <p style="font-size:11px; color:var(--muted); margin-top:5px;">Max 200 characters · This will appear on your profile</p>
+      </div>
+
+      <!-- Goal -->
+      <div>
+        <p class="section-title">I'm looking for</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;" id="goal-group">
+
+          <div id="goal-friend" onclick="selectGoal('friend')" style="padding:18px 14px; border-radius:16px; border:2px solid var(--gold); background:#FBF3DC; cursor:pointer; text-align:center; transition:all 0.2s;">
+            <div style="font-size:28px; margin-bottom:6px;">🤝</div>
+            <div style="font-size:14px; font-weight:700; color:#7A5C10;">Friendship</div>
+            <div style="font-size:11px; color:var(--muted); margin-top:3px; line-height:1.4;">Campus life, social events & fun</div>
           </div>
-        </div>
-        <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-          <p class="section-title" style="padding:0; margin-bottom:10px;">Interests</p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <span class="tag">🌏 Int'l Culture</span>
-            <span class="tag">✈️ Travel</span>
-            <span class="tag">🗼 Paris</span>
-            <span class="tag">🎌 Student Life</span>
+
+          <div id="goal-network" onclick="selectGoal('network')" style="padding:18px 14px; border-radius:16px; border:2px solid var(--border); background:#fff; cursor:pointer; text-align:center; transition:all 0.2s;">
+            <div style="font-size:28px; margin-bottom:6px;">💼</div>
+            <div style="font-size:14px; font-weight:700; color:var(--muted);">Networking</div>
+            <div style="font-size:11px; color:var(--muted); margin-top:3px; line-height:1.4;">Career, projects & internships</div>
           </div>
+
         </div>
-        <button class="btn-primary" style="border-radius:16px; padding:18px; background:linear-gradient(135deg,var(--navy),var(--accent-light));" onclick="goTo('screen-conversation')">
-          <i class="fas fa-comment" style="margin-right:8px;"></i>Send Message
+        <p style="font-size:11px; color:var(--muted); margin-top:8px;"><i class="fas fa-info-circle" style="margin-right:4px;"></i>You can change this later in your profile settings</p>
+      </div>
+
+      <!-- Finish button -->
+      <button class="btn-gold" style="margin-top:4px;" onclick="saveStep3(); buildProfile(); goTo('screen-profile-ready')">
+        <i class="fas fa-check" style="margin-right:8px;"></i>Finish Setup
+      </button>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN 7 – PROFILE READY (Sprint 1 end state)
+═══════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-profile-ready">
+  <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
+  <div style="flex:1; overflow-y:auto;">
+
+    <!-- Profile header -->
+    <div style="background:linear-gradient(160deg,var(--navy) 0%,var(--accent-light) 100%); padding:24px 20px 64px; position:relative;">
+      <!-- Top bar -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:28px; height:28px; border-radius:8px; overflow:hidden; border:1px solid rgba(201,168,76,0.4); background:#fff; display:flex; align-items:center; justify-content:center;">
+            <img src="../Logo%20App.jpeg" alt="MatchI" style="width:100%; height:100%; object-fit:contain;" />
+          </div>
+          <span style="font-size:14px; font-weight:700; color:rgba(255,255,255,0.9);">MatchI</span>
+        </div>
+        <button onclick="goTo('screen-profile-setup-1')" style="background:rgba(201,168,76,0.2); border:1px solid rgba(201,168,76,0.4); border-radius:10px; padding:7px 14px; color:var(--gold-light); font-size:12px; font-weight:600; cursor:pointer;">
+          <i class="fas fa-pen" style="margin-right:5px; font-size:10px;"></i>Edit
         </button>
       </div>
+      <!-- Avatar + name (populated by buildProfile()) -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+        <div id="profile-avatar" style="width:88px; height:88px; border-radius:50%; overflow:hidden; border:4px solid var(--gold); box-shadow:0 4px 20px rgba(0,0,0,0.3); background:linear-gradient(135deg,#EEF2FF,#D8E0F0); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <i class="fas fa-user" style="font-size:36px; color:var(--gold);"></i>
+        </div>
+        <div style="text-align:center;">
+          <h2 id="profile-name" style="font-size:22px; font-weight:800; color:#fff;">—</h2>
+          <p id="profile-subtitle" style="font-size:13px; color:rgba(255,255,255,0.7); margin-top:2px;">—</p>
+        </div>
+        <div id="profile-goal-badge" style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;"></div>
+      </div>
     </div>
-  </div>
 
-
-  <!-- ═══════════════════════════════════════════
-       SCREEN 7 – FILTERS
-  ═══════════════════════════════════════════ -->
-  <div class="screen" id="screen-filters">
-    <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
-    <div style="padding:8px 20px 0; display:flex; align-items:center; gap:12px; margin-bottom:20px;">
-      <button onclick="goTo('screen-swipe')" style="background:none; border:none; cursor:pointer; width:36px; height:36px; border-radius:10px; background:var(--border); display:flex; align-items:center; justify-content:center;"><i class="fas fa-arrow-left" style="color:var(--text); font-size:14px;"></i></button>
-      <div>
-        <h2 style="font-size:22px; font-weight:800; color:var(--text);">Filters</h2>
-        <p style="font-size:13px; color:var(--muted);">Customize your discovery</p>
+    <!-- Stats card -->
+    <div style="background:var(--card); margin:0 20px; border-radius:20px; padding:16px; box-shadow:var(--shadow); transform:translateY(-32px); display:flex; justify-content:space-around;">
+      <div style="text-align:center;">
+        <div style="font-size:20px; font-weight:800; color:var(--navy);">100%</div>
+        <div style="font-size:11px; color:var(--muted); font-weight:500;">Profile</div>
       </div>
-      <button style="margin-left:auto; background:none; border:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--gold);">Reset</button>
+      <div style="width:1px; background:var(--border);"></div>
+      <div style="text-align:center;">
+        <div id="stat-campus" style="font-size:15px; font-weight:800; color:var(--navy);">—</div>
+        <div style="font-size:11px; color:var(--muted); font-weight:500;">Campus</div>
+      </div>
+      <div style="width:1px; background:var(--border);"></div>
+      <div style="text-align:center;">
+        <div id="stat-year" style="font-size:20px; font-weight:800; color:var(--navy);">—</div>
+        <div style="font-size:11px; color:var(--muted); font-weight:500;">Year</div>
+      </div>
     </div>
-    <div style="flex:1; overflow-y:auto; padding:0 20px 20px; display:flex; flex-direction:column; gap:20px;">
-      <!-- Campus -->
+
+    <!-- Profile sections -->
+    <div style="padding:0 20px 24px; margin-top:-16px; display:flex; flex-direction:column; gap:16px;">
+
+      <!-- About -->
       <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-        <p class="section-title" style="padding:0; margin-bottom:12px;">Campus</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div style="padding:14px; border-radius:14px; border:2px solid var(--gold); background:#FBF3DC; cursor:pointer; text-align:center;">
-            <div style="font-size:22px; margin-bottom:4px;">🗼</div>
-            <div style="font-size:14px; font-weight:700; color:#8B6914;">Paris</div>
-          </div>
-          <div style="padding:14px; border-radius:14px; border:2px solid var(--border); background:#fff; cursor:pointer; text-align:center;">
-            <div style="font-size:22px; margin-bottom:4px;">🏙️</div>
-            <div style="font-size:14px; font-weight:600; color:var(--muted);">Lille</div>
-          </div>
-        </div>
+        <p class="section-title">About Me</p>
+        <p id="profile-bio" style="font-size:14px; color:var(--text); line-height:1.6;">—</p>
       </div>
-      <!-- Mode -->
-      <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-        <p class="section-title" style="padding:0; margin-bottom:12px;">Looking For</p>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <label style="display:flex; align-items:center; gap:12px; cursor:pointer; padding:12px; border-radius:12px; border:1.5px solid var(--gold); background:#FBF3DC;">
-            <input type="checkbox" checked style="width:18px; height:18px; accent-color:var(--gold);" />
-            <span style="font-size:22px;">🤝</span>
-            <div><div style="font-size:14px; font-weight:600; color:var(--text);">Friendship</div><div style="font-size:12px; color:var(--muted);">Campus life & social</div></div>
-          </label>
-          <label style="display:flex; align-items:center; gap:12px; cursor:pointer; padding:12px; border-radius:12px; border:1.5px solid var(--gold); background:#FBF3DC;">
-            <input type="checkbox" checked style="width:18px; height:18px; accent-color:var(--gold);" />
-            <span style="font-size:22px;">💼</span>
-            <div><div style="font-size:14px; font-weight:600; color:var(--text);">Networking</div><div style="font-size:12px; color:var(--muted);">Career & projects</div></div>
-          </label>
-          <label style="display:flex; align-items:center; gap:12px; cursor:pointer; padding:12px; border-radius:12px; border:1.5px solid var(--border); background:#fff;">
-            <input type="checkbox" style="width:18px; height:18px; accent-color:var(--gold);" />
-            <span style="font-size:22px;">📚</span>
-            <div><div style="font-size:14px; font-weight:600; color:var(--text);">Study Groups</div><div style="font-size:12px; color:var(--muted);">Academic collaboration</div></div>
-          </label>
-        </div>
-      </div>
-      <!-- Study Year -->
-      <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-        <p class="section-title" style="padding:0; margin-bottom:12px;">Study Year</p>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <span style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--border); font-size:13px; font-weight:500; cursor:pointer; color:var(--muted);">All</span>
-          <span style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--border); font-size:13px; font-weight:500; cursor:pointer; color:var(--muted);">B1</span>
-          <span style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--border); font-size:13px; font-weight:500; cursor:pointer; color:var(--muted);">B3</span>
-          <span style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--gold); background:#FBF3DC; font-size:13px; font-weight:600; cursor:pointer; color:#8B6914;">M1</span>
-          <span style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--gold); background:#FBF3DC; font-size:13px; font-weight:600; cursor:pointer; color:#8B6914;">M2</span>
-          <span style="padding:8px 16px; border-radius:20px; border:1.5px solid var(--border); font-size:13px; font-weight:500; cursor:pointer; color:var(--muted);">Exchange</span>
-        </div>
-      </div>
+
       <!-- Languages -->
       <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-        <p class="section-title" style="padding:0; margin-bottom:12px;">Languages</p>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <span style="padding:7px 14px; border-radius:20px; background:#FBF3DC; border:1.5px solid var(--gold); font-size:13px; font-weight:500; color:#8B6914; cursor:pointer;">🇫🇷 French</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#FBF3DC; border:1.5px solid var(--gold); font-size:13px; font-weight:500; color:#8B6914; cursor:pointer;">🇬🇧 English</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🇩🇪 German</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🇪🇸 Spanish</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🇯🇵 Japanese</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🇮🇹 Italian</span>
-        </div>
+        <p class="section-title">Languages</p>
+        <div id="profile-languages" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
       </div>
+
       <!-- Interests -->
       <div style="background:var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
-        <p class="section-title" style="padding:0; margin-bottom:12px;">Interests</p>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <span style="padding:7px 14px; border-radius:20px; background:#FBF3DC; border:1.5px solid var(--gold); font-size:13px; font-weight:500; color:#8B6914; cursor:pointer;">📊 Finance</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">💼 Consulting</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🚀 Entrepreneurship</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🎵 Music</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🏃 Sports</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">✈️ Travel</span>
-          <span style="padding:7px 14px; border-radius:20px; background:#fff; border:1.5px solid var(--border); font-size:13px; font-weight:500; color:var(--muted); cursor:pointer;">🌏 Int'l Culture</span>
+        <p class="section-title">Interests</p>
+        <div id="profile-interests" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+      </div>
+
+      <!-- Sprint 1 coming soon banner -->
+      <div style="background:linear-gradient(135deg,var(--navy),var(--accent)); border-radius:16px; padding:20px; display:flex; gap:14px; align-items:center;">
+        <div style="width:44px; height:44px; border-radius:12px; background:rgba(201,168,76,0.2); border:1px solid rgba(201,168,76,0.4); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <i class="fas fa-rocket" style="color:var(--gold-light); font-size:18px;"></i>
+        </div>
+        <div>
+          <p style="font-size:13px; font-weight:700; color:#fff; margin-bottom:3px;">Matching coming in Sprint 2</p>
+          <p style="font-size:12px; color:rgba(255,255,255,0.65); line-height:1.4;">Swipe, match, and chat features are under development. Stay tuned!</p>
         </div>
       </div>
-      <button class="btn-primary" style="border-radius:16px; padding:18px; font-size:16px; background:linear-gradient(135deg,var(--navy),var(--accent-light));" onclick="goTo('screen-swipe')">
-        Apply Filters · 24 profiles
+
+      <!-- Log out -->
+      <button onclick="goTo('screen-welcome')" style="background:transparent; border:2px solid var(--border); border-radius:14px; padding:14px; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:8px;">
+        <i class="fas fa-sign-out-alt"></i> Log Out
       </button>
+
     </div>
   </div>
+</div>
 
-
-  <!-- ═══════════════════════════════════════════
-       SCREEN 8 – NOTIFICATIONS
-  ═══════════════════════════════════════════ -->
-  <div class="screen" id="screen-notifications">
-    <div class="status-bar"><span class="time">9:41</span><div class="status-icons"><i class="fas fa-signal"></i><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div></div>
-    <div style="padding:8px 20px 16px; display:flex; justify-content:space-between; align-items:center;">
-      <div>
-        <h2 style="font-size:24px; font-weight:800; color:var(--text);">Notifications</h2>
-        <p style="font-size:13px; color:var(--muted);">5 new updates</p>
-      </div>
-      <button style="background:none; border:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--gold);">Mark all read</button>
-    </div>
-    <div style="flex:1; overflow-y:auto; padding:0 20px 20px; display:flex; flex-direction:column; gap:10px;">
-      <!-- Section: New Matches -->
-      <p class="section-title" style="padding:0; margin-bottom:4px;">New Matches 🎉</p>
-      <!-- Notif 1 – Yuki -->
-      <div onclick="goTo('screen-match')" style="background:var(--card); border-radius:16px; padding:14px 16px; box-shadow:0 2px 12px rgba(0,0,0,0.05); display:flex; align-items:center; gap:12px; cursor:pointer; border-left:4px solid var(--gold);">
-        <div style="width:48px; height:48px; border-radius:50%; overflow:hidden; flex-shrink:0; border:2px solid var(--gold);">
-          <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div style="flex:1; min-width:0;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-            <span style="font-size:14px; font-weight:700; color:var(--text);">Yuki S. liked you back!</span>
-            <span style="font-size:11px; color:var(--muted);">2m</span>
-          </div>
-          <p style="font-size:13px; color:var(--muted);">You matched with Yuki · Paris – La Défense · Exchange</p>
-        </div>
-        <div style="width:10px; height:10px; background:var(--gold); border-radius:50%; flex-shrink:0;"></div>
-      </div>
-      <!-- Notif 2 – Etienne -->
-      <div style="background:var(--card); border-radius:16px; padding:14px 16px; box-shadow:0 2px 12px rgba(0,0,0,0.05); display:flex; align-items:center; gap:12px; cursor:pointer; border-left:4px solid var(--gold);">
-        <div style="width:48px; height:48px; border-radius:50%; overflow:hidden; flex-shrink:0; border:2px solid var(--gold);">
-          <img src="User persona 4.jpg" alt="Etienne" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div style="flex:1; min-width:0;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-            <span style="font-size:14px; font-weight:700; color:var(--text);">Etienne N. liked you!</span>
-            <span style="font-size:11px; color:var(--muted);">15m</span>
-          </div>
-          <p style="font-size:13px; color:var(--muted);">Paris – La Défense · B3 · Junior Entreprise IESEG</p>
-        </div>
-        <div style="width:10px; height:10px; background:var(--gold); border-radius:50%; flex-shrink:0;"></div>
-      </div>
-      <!-- Section: Messages -->
-      <p class="section-title" style="padding:0; margin-top:8px; margin-bottom:4px;">New Messages 💬</p>
-      <!-- Notif 3 – Yuki -->
-      <div onclick="openConversation()" style="background:var(--card); border-radius:16px; padding:14px 16px; box-shadow:0 2px 12px rgba(0,0,0,0.05); display:flex; align-items:center; gap:12px; cursor:pointer; border-left:4px solid var(--green);">
-        <div style="width:48px; height:48px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-          <img src="User persona 1.jpg" alt="Yuki" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div style="flex:1; min-width:0;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-            <span style="font-size:14px; font-weight:700; color:var(--text);">Yuki S.</span>
-            <span style="font-size:11px; color:var(--muted);">2m</span>
-          </div>
-          <p style="font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">"Merci beaucoup! 😊 Can we meet at the Eiffel Tower?"</p>
-        </div>
-        <div style="width:10px; height:10px; background:var(--green); border-radius:50%; flex-shrink:0;"></div>
-      </div>
-      <!-- Notif 4 – Etienne -->
-      <div style="background:var(--card); border-radius:16px; padding:14px 16px; box-shadow:0 2px 12px rgba(0,0,0,0.05); display:flex; align-items:center; gap:12px; cursor:pointer; border-left:4px solid var(--green);">
-        <div style="width:48px; height:48px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-          <img src="User persona 4.jpg" alt="Etienne" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div style="flex:1; min-width:0;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-            <span style="font-size:14px; font-weight:700; color:var(--text);">Etienne N.</span>
-            <span style="font-size:11px; color:var(--muted);">1h</span>
-          </div>
-          <p style="font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">"Are you joining the Junior Entreprise event tomorrow?"</p>
-        </div>
-        <div style="width:10px; height:10px; background:var(--green); border-radius:50%; flex-shrink:0;"></div>
-      </div>
-      <!-- Section: Suggestions -->
-      <p class="section-title" style="padding:0; margin-top:8px; margin-bottom:4px;">Suggested Connections ✨</p>
-      <!-- Notif 5 – Lucas -->
-      <div style="background:var(--card); border-radius:16px; padding:14px 16px; box-shadow:0 2px 12px rgba(0,0,0,0.05); display:flex; align-items:center; gap:12px; cursor:pointer;">
-        <div style="width:48px; height:48px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-          <img src="User persona 2.jpg" alt="Lucas" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div style="flex:1; min-width:0;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-            <span style="font-size:14px; font-weight:700; color:var(--text);">Lucas D. might interest you</span>
-            <span style="font-size:11px; color:var(--muted);">3h</span>
-          </div>
-          <p style="font-size:13px; color:var(--muted);">2 common interests · Lille · B1</p>
-        </div>
-      </div>
-      <!-- Notif 6 – Camille -->
-      <div style="background:var(--card); border-radius:16px; padding:14px 16px; box-shadow:0 2px 12px rgba(0,0,0,0.05); display:flex; align-items:center; gap:12px; cursor:pointer;">
-        <div style="width:48px; height:48px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-          <img src="User persona 3.jpg" alt="Camille" style="width:100%; height:100%; object-fit:cover;" />
-        </div>
-        <div style="flex:1; min-width:0;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-            <span style="font-size:14px; font-weight:700; color:var(--text);">Camille P. · Finance Club</span>
-            <span style="font-size:11px; color:var(--muted);">5h</span>
-          </div>
-          <p style="font-size:13px; color:var(--muted);">Same specialization · Lille · M1</p>
-        </div>
-      </div>
-    </div>
-    <!-- Bottom nav -->
-    <div class="bottom-nav">
-      <div class="nav-item" onclick="goTo('screen-swipe')"><i class="fas fa-fire"></i><span>Discover</span></div>
-      <div class="nav-item" onclick="goTo('screen-chat')"><i class="fas fa-comment-dots"></i><span>Chats</span></div>
-      <div class="nav-item" onclick="goTo('screen-profile')"><i class="fas fa-user"></i><span>Profile</span></div>
-      <div class="nav-item active" onclick="goTo('screen-notifications')"><i class="fas fa-bell" style="color:var(--gold);"></i><span style="color:var(--gold);">Alerts</span></div>
-    </div>
-  </div>
-
-</div><!-- end phone -->
+</div><!-- end .phone -->
 
 
 <script>
-  // ── Navigation ──────────────────────────────────────────────
-  function goTo(screenId) {
+  // ── In-memory profile state ──────────────────────────────────
+  const profile = {
+    name: '', age: '', campus: '', year: '',
+    languages: [], interests: [], goal: 'friend',
+    bio: '', photoDataUrl: ''
+  };
+
+  // ── Screen navigation ────────────────────────────────────────
+  function goTo(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById(screenId);
-    if (target) {
-      target.classList.add('active');
-      target.scrollTop = 0;
+    const t = document.getElementById(id);
+    if (t) { t.classList.add('active'); t.scrollTop = 0; }
+  }
+
+  // ── Overlay helpers ──────────────────────────────────────────
+  function showOverlay(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('show');
+  }
+  function hideOverlay(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  }
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('overlay')) e.target.classList.remove('show');
+  });
+
+  // ── Password visibility toggle ───────────────────────────────
+  function togglePw(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon  = document.getElementById(iconId);
+    if (!input || !icon) return;
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.replace('fa-eye-slash', 'fa-eye');
     }
   }
 
-  // ── Persona profiles for swipe cards ────────────────────────
-  const profiles = [
-    {
-      name: 'Yuki', age: 21, campus: 'Paris', year: 'Exchange', prog: 'International',
-      img: 'User persona 1.jpg',
-      tags: ['🌏 Int\'l Culture', '✈️ Travel', '🎌 Paris Life'],
-      mode: '🤝 Friendship',
-      langs: 'Japanese · English · beginner French',
-      bio: '"I\'m new in Paris and looking for people to explore the city with."'
-    },
-    {
-      name: 'Lucas', age: 18, campus: 'Lille', year: 'B1', prog: 'Bachelor',
-      img: 'User persona 2.jpg',
-      tags: ['🏃 Sport', '🎵 Music', '🎓 Student Life'],
-      mode: '🤝 Friendship',
-      langs: 'French · intermediate English',
-      bio: '"I just arrived in Lille and I\'m looking for people to share student life with."'
-    },
-    {
-      name: 'Camille', age: 23, campus: 'Lille', year: 'M1', prog: 'Finance',
-      img: 'User persona 3.jpg',
-      tags: ['📊 Finance', '💼 Consulting', '🤝 Networking'],
-      mode: '💼 Networking',
-      langs: 'French · English C1 · Spanish B2',
-      bio: '"Looking for motivated students to exchange about finance and career opportunities."'
-    },
-    {
-      name: 'Etienne', age: 21, campus: 'Paris', year: 'B3', prog: 'Bachelor',
-      img: 'User persona 4.jpg',
-      tags: ['🚀 Entrepreneurship', '🤝 Networking', '🏢 Associations'],
-      mode: '💼 Networking',
-      langs: 'French · advanced English',
-      bio: '"I want to connect students from both IESEG campuses."'
-    },
-    {
-      name: 'Yuki', age: 21, campus: 'Paris', year: 'Exchange', prog: 'International',
-      img: 'User persona 1.jpg',
-      tags: ['🌏 Int\'l Culture', '✈️ Travel', '🎌 Paris Life'],
-      mode: '🤝 Friendship',
-      langs: 'Japanese · English · beginner French',
-      bio: '"I\'m new in Paris and looking for people to explore the city with."'
-    },
-  ];
-  let currentIdx = 0;
-
-  function renderCard(idx) {
-    const p = profiles[idx % profiles.length];
-    const card = document.getElementById('swipe-card');
-    card.innerHTML = `
-      <div style="height:280px; position:relative; overflow:hidden;">
-        <img src="${p.img}" alt="${p.name}" style="width:100%; height:280px; object-fit:cover; display:block;" />
-        <div style="position:absolute; bottom:0; left:0; right:0; height:140px; background:linear-gradient(transparent, rgba(11,31,75,0.85));"></div>
-        <div style="position:absolute; bottom:16px; left:20px; right:20px;">
-          <div style="display:flex; align-items:baseline; gap:8px;">
-            <span style="font-size:26px; font-weight:800; color:#fff;">${p.name}</span>
-            <span style="font-size:20px; font-weight:400; color:rgba(255,255,255,0.85);">${p.age}</span>
-            <span style="margin-left:auto; background:rgba(201,168,76,0.25); border:1px solid rgba(201,168,76,0.5); border-radius:20px; padding:4px 10px; font-size:12px; color:#E8C96A; font-weight:500; backdrop-filter:blur(4px);">🏙️ ${p.campus}</span>
-          </div>
-          <p style="font-size:13px; color:rgba(255,255,255,0.8); margin-top:2px;">${p.year} · ${p.prog}</p>
-        </div>
-      </div>
-      <div style="padding:16px 20px;">
-        <p style="font-size:14px; color:var(--text); line-height:1.5; margin-bottom:12px; font-style:italic;">${p.bio}</p>
-        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
-          ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-          <span class="tag navy">${p.mode}</span>
-        </div>
-        <div style="display:flex; gap:8px; align-items:center;">
-          <span style="font-size:12px; color:var(--muted);">🗣️</span>
-          <span style="font-size:12px; color:var(--muted); font-weight:500;">${p.langs}</span>
-        </div>
-      </div>`;
+  // ── Chip toggle ──────────────────────────────────────────────
+  // year-group is single-select; lang-group and interest-group are multi-select
+  function selectChip(el, groupId) {
+    if (groupId === 'year-group') {
+      // single-select: deactivate siblings first
+      document.querySelectorAll('#year-group .chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    } else {
+      el.classList.toggle('active');
+    }
   }
 
-  function swipeLeft() {
-    const card = document.getElementById('swipe-card');
-    card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
-    card.style.transform = 'translateX(-120%) rotate(-15deg)';
-    card.style.opacity = '0';
-    setTimeout(() => {
-      currentIdx++;
-      renderCard(currentIdx);
-      card.style.transition = 'none';
-      card.style.transform = 'translateX(120%) rotate(10deg)';
-      card.style.opacity = '0';
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
-          card.style.transform = 'translateX(0) rotate(0)';
-          card.style.opacity = '1';
-        });
-      });
-    }, 350);
+  // ── Goal selector (single-select) ───────────────────────────
+  function selectGoal(mode) {
+    profile.goal = mode;
+    const friend  = document.getElementById('goal-friend');
+    const network = document.getElementById('goal-network');
+    if (mode === 'friend') {
+      friend.style.border      = '2px solid var(--gold)';
+      friend.style.background  = '#FBF3DC';
+      friend.querySelector('div:nth-child(2)').style.color = '#7A5C10';
+      network.style.border     = '2px solid var(--border)';
+      network.style.background = '#fff';
+      network.querySelector('div:nth-child(2)').style.color = 'var(--muted)';
+    } else {
+      network.style.border     = '2px solid var(--gold)';
+      network.style.background = '#FBF3DC';
+      network.querySelector('div:nth-child(2)').style.color = '#7A5C10';
+      friend.style.border      = '2px solid var(--border)';
+      friend.style.background  = '#fff';
+      friend.querySelector('div:nth-child(2)').style.color = 'var(--muted)';
+    }
   }
 
-  function swipeRight() {
-    const card = document.getElementById('swipe-card');
-    card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
-    card.style.transform = 'translateX(120%) rotate(15deg)';
-    card.style.opacity = '0';
-    setTimeout(() => {
-      goTo('screen-match');
-      currentIdx++;
-      renderCard(currentIdx);
-      card.style.transition = 'none';
-      card.style.transform = 'translateX(-120%) rotate(-10deg)';
-      card.style.opacity = '0';
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
-          card.style.transform = 'translateX(0) rotate(0)';
-          card.style.opacity = '1';
-        });
-      });
-    }, 350);
+  // ── Photo upload ─────────────────────────────────────────────
+  function triggerPhotoUpload() {
+    document.getElementById('photo-input').click();
+  }
+  function previewPhoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      profile.photoDataUrl = e.target.result;
+      const circle = document.getElementById('photo-circle');
+      circle.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+      circle.style.border = '3px solid var(--gold)';
+    };
+    reader.readAsDataURL(file);
   }
 
-  // ── Onboarding helpers ───────────────────────────────────────
-  function selectYear(el) {
-    document.querySelectorAll('.year-btn').forEach(b => {
-      b.style.border = '1.5px solid var(--border)';
-      b.style.background = 'transparent';
-      b.style.color = 'var(--muted)';
-      b.style.fontWeight = '500';
-    });
-    el.style.border = '1.5px solid var(--gold)';
-    el.style.background = '#FBF3DC';
-    el.style.color = '#8B6914';
-    el.style.fontWeight = '600';
+  // ── Step savers ──────────────────────────────────────────────
+  function saveStep1() {
+    profile.name   = (document.getElementById('setup-name').value  || '').trim();
+    profile.age    = (document.getElementById('setup-age').value   || '').trim();
+    profile.campus = (document.getElementById('setup-campus').value || '').trim();
+    // active chip in year-group
+    const activeYear = document.querySelector('#year-group .chip.active');
+    profile.year = activeYear ? activeYear.textContent.trim() : '';
   }
 
-  function selectMode(el, mode) {
-    const friend = document.getElementById('mode-friend');
-    const network = document.getElementById('mode-network');
-    [friend, network].forEach(m => {
-      m.style.border = '2px solid var(--border)';
-      m.style.background = '#fff';
-      m.querySelector('div:nth-child(2)').style.color = 'var(--muted)';
-    });
-    el.style.border = '2px solid var(--gold)';
-    el.style.background = '#FBF3DC';
-    el.querySelector('div:nth-child(2)').style.color = '#8B6914';
+  function saveStep2() {
+    profile.languages = Array.from(
+      document.querySelectorAll('#lang-group .chip.active')
+    ).map(c => c.textContent.trim());
+    profile.interests = Array.from(
+      document.querySelectorAll('#interest-group .chip.active')
+    ).map(c => c.textContent.trim());
   }
 
-  // ── Open conversation shortcut ───────────────────────────────
-  function openConversation() {
-    goTo('screen-conversation');
+  function saveStep3() {
+    profile.bio  = (document.getElementById('setup-bio').value || '').trim();
+    // goal is already stored by selectGoal(); read current visual state as fallback
+    const friendActive = document.getElementById('goal-friend').style.background === 'rgb(251, 243, 220)';
+    profile.goal = friendActive ? 'friend' : 'network';
   }
 
-  // ── Touch/drag swipe on card ─────────────────────────────────
-  (function() {
-    let startX = 0, isDragging = false;
-    const getCard = () => document.getElementById('swipe-card');
-    document.addEventListener('mousedown', e => {
-      const card = getCard();
-      if (card && card.contains(e.target)) { startX = e.clientX; isDragging = true; }
-    });
-    document.addEventListener('mousemove', e => {
-      if (!isDragging) return;
-      const card = getCard();
-      if (!card) return;
-      const dx = e.clientX - startX;
-      card.style.transition = 'none';
-      card.style.transform = `translateX(${dx}px) rotate(${dx * 0.05}deg)`;
-    });
-    document.addEventListener('mouseup', e => {
-      if (!isDragging) return;
-      isDragging = false;
-      const card = getCard();
-      if (!card) return;
-      const dx = e.clientX - startX;
-      if (dx > 80) swipeRight();
-      else if (dx < -80) swipeLeft();
-      else {
-        card.style.transition = 'transform 0.3s ease';
-        card.style.transform = 'translateX(0) rotate(0)';
-      }
-    });
-    document.addEventListener('touchstart', e => {
-      const card = getCard();
-      if (card && card.contains(e.target)) { startX = e.touches[0].clientX; isDragging = true; }
-    }, {passive: true});
-    document.addEventListener('touchmove', e => {
-      if (!isDragging) return;
-      const card = getCard();
-      if (!card) return;
-      const dx = e.touches[0].clientX - startX;
-      card.style.transition = 'none';
-      card.style.transform = `translateX(${dx}px) rotate(${dx * 0.05}deg)`;
-    }, {passive: true});
-    document.addEventListener('touchend', e => {
-      if (!isDragging) return;
-      isDragging = false;
-      const card = getCard();
-      if (!card) return;
-      const dx = e.changedTouches[0].clientX - startX;
-      if (dx > 60) swipeRight();
-      else if (dx < -60) swipeLeft();
-      else {
-        card.style.transition = 'transform 0.3s ease';
-        card.style.transform = 'translateX(0) rotate(0)';
-      }
-    });
-  })();
+  // ── Build profile screen from collected data ─────────────────
+  function buildProfile() {
+    const name    = profile.name    || 'Your Name';
+    const age     = profile.age     || '';
+    const campus  = profile.campus  || '—';
+    const year    = profile.year    || '—';
+    const bio     = profile.bio     || 'No bio added yet.';
+    const goal    = profile.goal;
+
+    // Short campus label for stat card (keep it readable)
+    const campusShort = campus.includes('Paris') ? 'Paris' : campus.includes('Lille') ? 'Lille' : campus;
+
+    // Name + subtitle
+    document.getElementById('profile-name').textContent = name;
+    const agePart    = age    ? age + ' · '    : '';
+    const campusPart = campus ? campus         : '';
+    document.getElementById('profile-subtitle').textContent =
+      agePart + (year !== '—' ? year + ' · ' : '') + campusPart;
+
+    // Stats
+    document.getElementById('stat-campus').textContent = campusShort;
+    document.getElementById('stat-year').textContent   = year;
+
+    // Bio
+    document.getElementById('profile-bio').textContent = bio;
+
+    // Goal badge
+    const badgeEl = document.getElementById('profile-goal-badge');
+    badgeEl.innerHTML = '';
+    if (goal === 'friend' || goal === 'both') {
+      badgeEl.innerHTML += `<span style="background:rgba(201,168,76,0.2);color:var(--gold-light);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500;">🤝 Friendship</span>`;
+    }
+    if (goal === 'network' || goal === 'both') {
+      badgeEl.innerHTML += `<span style="background:rgba(255,255,255,0.12);color:#fff;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500;">💼 Networking</span>`;
+    }
+    if (!badgeEl.innerHTML) {
+      badgeEl.innerHTML = `<span style="background:rgba(255,255,255,0.12);color:#fff;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500;">🤝 Friendship</span>`;
+    }
+
+    // Avatar
+    const avatarEl = document.getElementById('profile-avatar');
+    if (profile.photoDataUrl) {
+      avatarEl.innerHTML = `<img src="${profile.photoDataUrl}" style="width:100%;height:100%;object-fit:cover;" />`;
+      avatarEl.style.background = 'transparent';
+    } else {
+      avatarEl.innerHTML = `<i class="fas fa-user" style="font-size:36px;color:var(--gold);"></i>`;
+      avatarEl.style.background = 'linear-gradient(135deg,#EEF2FF,#D8E0F0)';
+    }
+
+    // Languages
+    const langEl = document.getElementById('profile-languages');
+    if (profile.languages.length) {
+      langEl.innerHTML = profile.languages.map(l =>
+        `<span style="background:#E8EDF8;color:var(--navy);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500;">${l}</span>`
+      ).join('');
+    } else {
+      langEl.innerHTML = `<span style="font-size:13px;color:var(--muted);">No languages selected.</span>`;
+    }
+
+    // Interests
+    const intEl = document.getElementById('profile-interests');
+    if (profile.interests.length) {
+      intEl.innerHTML = profile.interests.map(i =>
+        `<span style="background:#EEF2FF;color:var(--accent);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500;">${i}</span>`
+      ).join('');
+    } else {
+      intEl.innerHTML = `<span style="font-size:13px;color:var(--muted);">No interests selected.</span>`;
+    }
+  }
 </script>
 </body>
 </html>
+
